@@ -13,11 +13,11 @@ const grammar: { [index: string]: { title?: string, day?: string, time?: string 
     "Lunch.": { title: "Lunch at the canteen" },
     "Cinema.": { title: "A movie at the cinema" },
     "Walk.": { title: "A walk in the park" },
-    "Date.": { title: "A romantic date at your favorite restaurant" },
+    "Date.": { title: "A romantic date at a great restaurant" },
     "Language course.": { title: "Swedish language course on zoom" },
     "Programming.": { title: "Programming the assignment with classmates" },
     "Video games.": { title: "Gaming with friends" },
-    "Phone call.": { title: "A call with your family" },
+    "Phone call.": { title: "A call with the family" },
 
     "On Monday.": { day: "Monday" },
     "On Tuesday.": { day: "Tuesday" },
@@ -50,6 +50,18 @@ const grammar: { [index: string]: { title?: string, day?: string, time?: string 
     "7.": { time: "7:00" },
     "8.": { time: "8:00" },
     "9.": { time: "9:00" },
+    "10": { time: "10:00" },
+    "11": { time: "11:00" },
+    "12": { time: "12:00" },
+    "1": { time: "1:00" },
+    "2": { time: "2:00" },
+    "3": { time: "3:00" },
+    "4": { time: "4:00" },
+    "5": { time: "5:00" },
+    "6": { time: "6:00" },
+    "7": { time: "7:00" },
+    "8": { time: "8:00" },
+    "9": { time: "9:00" },
     "At 10:00": { time: "10:00" },
     "At 11:00": { time: "11:00" },
     "At 12:00": { time: "12:00" },
@@ -98,6 +110,18 @@ const grammar: { [index: string]: { title?: string, day?: string, time?: string 
     "7:00 o'clock.": { time: "7:00" },
     "8:00 o'clock.": { time: "8:00" },
     "9:00 o'clock.": { time: "9:00" },
+    "10:00 o'clock": { time: "10:00" },
+    "11:00 o'clock": { time: "11:00" },
+    "12:00 o'clock": { time: "12:00" },
+    "1:00 o'clock": { time: "1:00" },
+    "2:00 o'clock": { time: "2:00" },
+    "3:00 o'clock": { time: "3:00" },
+    "4:00 o'clock": { time: "4:00" },
+    "5:00 o'clock": { time: "5:00" },
+    "6:00 o'clock": { time: "6:00" },
+    "7:00 o'clock": { time: "7:00" },
+    "8:00 o'clock": { time: "8:00" },
+    "9:00 o'clock": { time: "9:00" },
 }
 
 const ans_grammar: { [index: string]: { confirmation?: string, negation?: string } } = {
@@ -116,6 +140,7 @@ const ans_grammar: { [index: string]: { confirmation?: string, negation?: string
 const dec_grammar: { [index: string]: { meeting?: string, celebrity?: string } } = {
 
     "I want to create a meeting.": { meeting: "Yes" },
+    "Create a meeting.": { meeting: "Yes" },
     "A meeting.": { meeting: "Yes" },
     "I want a meeting.": { meeting: "Yes" },
     "Meeting.": { meeting: "Yes" },
@@ -139,10 +164,41 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
         },
         init: {
             on: {
-                TTS_READY: 'welcome',
-                CLICK: 'welcome'
+                TTS_READY: 'askForName',
+                CLICK: 'askForName'
             }
         },
+
+        askForName: {
+            initial: 'prompt',
+            on: {
+                RECOGNISED: [
+                    {
+                        target: 'greet',
+                        actions: assign({ username: (context) => context.recResult[0].utterance })
+                    }
+                ],
+                TIMEOUT: '.prompt'
+            },
+            states: {
+                prompt: {
+                    entry: say("Hi, what's your name?"),
+                    on: { ENDSPEECH: 'ask' }
+                },
+                ask: {
+                    entry: send('LISTEN'),
+                }
+            }
+        },
+
+        greet: {
+            entry: send((context) => ({
+                type: 'SPEAK',
+                value: `Welcome, ${context.username}.`
+            })),
+            on: { ENDSPEECH: 'welcome' }
+        },
+
         welcome: {
             initial: 'prompt',
             on: {
@@ -175,12 +231,13 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
+
         celebrity: {
             initial: 'prompt',
             on: {
                 RECOGNISED: [
                     {
-                        target: 'getCeleb',
+                        target: 'confirmCeleb',
                         actions: assign({ celebrity: (context) => context.recResult[0].utterance })
                     },
                 ],
@@ -193,13 +250,18 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 },
                 ask: {
                     entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I didn't understand that. Can you repeat?."),
-                    on: { ENDSPEECH: 'ask' }
                 }
             }
         },
+
+        confirmCeleb: {
+            entry: send((context) => ({
+                type: 'SPEAK',
+                value: `OK, looking for information about ${context.celebrity}`
+            })),
+            on: { ENDSPEECH: 'getCeleb' }
+        },
+
         getCeleb: {
             invoke: {
                 id: 'getInfo',
@@ -216,6 +278,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
+
         celebMeeting: {
             initial: 'prompt',
             on: {
@@ -226,7 +289,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         actions: assign({ title: (context) => `meeting with ${context.celebrity}` })
                     },
                     {
-                        target: 'celebrity',
+                        target: 'welcome',
                         cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                     },
                     {
@@ -252,6 +315,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
+
         purpose: {
             initial: 'prompt',
             on: {
@@ -281,6 +345,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
+
         info: {
             entry: send((context) => ({
                 type: 'SPEAK',
@@ -288,6 +353,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
             })),
             on: { ENDSPEECH: 'date' }
         },
+
         date: {
             initial: 'prompt',
             on: {
@@ -305,7 +371,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
             },
             states: {
                 prompt: {
-                    entry: say("On which day is it?"),
+                    entry: say("On which day is this meeting going to be?"),
                     on: { ENDSPEECH: 'ask' }
                 },
                 ask: {
@@ -317,12 +383,13 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
+
         time: {
             initial: 'prompt',
             on: {
                 RECOGNISED: [
                     {
-                        target: 'confirmtime',
+                        target: 'info3',
                         cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}),
                         actions: assign({ time: (context) => grammar[context.recResult[0].utterance].time! })
                     },
@@ -346,19 +413,29 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
+
         info2: {
             entry: send((context) => ({
                 type: 'SPEAK',
                 value: `OK, ${context.day}`
             })),
-            on: { ENDSPEECH: 'allday' }
+            on: { ENDSPEECH: 'allDay' }
         },
-        allday: {
+
+        info3: {
+            entry: send((context) => ({
+                type: 'SPEAK',
+                value: `OK, ${context.time}`
+            })),
+            on: { ENDSPEECH: 'confirmTime' }
+        },
+
+        allDay: {
             initial: 'prompt',
             on: {
                 RECOGNISED: [
                     {
-                        target: 'confirmallday',
+                        target: 'confirmAllDay',
                         cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
                     },
                     {
@@ -371,6 +448,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 ],
                 TIMEOUT: '.prompt'
             },
+
             states: {
                 prompt: {
                     entry: say("Will it take the whole day?"),
@@ -385,7 +463,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
-        confirmallday: {
+
+        confirmAllDay: {
             initial: 'prompt',
             on: {
                 RECOGNISED: [
@@ -403,11 +482,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 ],
                 TIMEOUT: '.prompt'
             },
+
             states: {
                 prompt: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `Do you want me to create a meeting titled ${context.title} for ${context.day} for the whole day?`
+                        value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} for the whole day?`
                     })),
                     on: { ENDSPEECH: 'ask' }
                 },
@@ -420,7 +500,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
-        confirmtime: {
+
+        confirmTime: {
             initial: 'prompt',
             on: {
                 RECOGNISED: [
@@ -438,11 +519,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 ],
                 TIMEOUT: '.prompt'
             },
+
             states: {
                 prompt: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `Do you want me to create a meeting titled ${context.title} for ${context.day} at ${context.time}?`
+                        value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} at ${context.time}?`
                     })),
                     on: { ENDSPEECH: 'ask' }
                 },
@@ -455,8 +537,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 }
             }
         },
+
         success: {
-            entry: say(`Your meeting has been created`),
+            entry: say(`Your meeting has been created!`),
             on: { ENDSPEECH: 'init' }  
         }
     }

@@ -36,6 +36,7 @@ interface SDSContext {
     azureAuthorizationToken: string;
     audioCtx: any;
 
+    username: string;
     title: string;
     day: string;
     time: string;
