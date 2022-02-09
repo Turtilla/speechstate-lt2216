@@ -42,6 +42,8 @@ interface SDSContext {
     time: string;
     celebrity: string;
     info: string;
+    category: string;
+    joke: string;
 }
 
 type SDSEvent =
