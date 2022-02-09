@@ -36,11 +36,11 @@ const grammar: { [index: string]: { title?: string, day?: string, time?: string 
     "Today": { day: "today" },
     "Tomorrow.": { day: "tomorrow" },
 
+    "Midday.": { time: "12:00" }, // this section is rather long due to having 12 possible hours and many ways of saying them (or them being written down)
+    "At noon": { time: "12:00" },
     "10.": { time: "10:00" },
     "11.": { time: "11:00" },
     "12.": { time: "12:00" },
-    "Midday.": { time: "12:00" },
-    "At noon": { time: "12:00" },
     "1.": { time: "1:00" },
     "2.": { time: "2:00" },
     "3.": { time: "3:00" },
@@ -62,6 +62,42 @@ const grammar: { [index: string]: { title?: string, day?: string, time?: string 
     "At 7:00": { time: "7:00" },
     "At 8:00": { time: "8:00" },
     "At 9:00": { time: "9:00" },
+    "At ten": { time: "10:00" },
+    "At eleven": { time: "11:00" },
+    "At twelve": { time: "12:00" },
+    "At one": { time: "1:00" },
+    "At two": { time: "2:00" },
+    "At three": { time: "3:00" },
+    "At four": { time: "4:00" },
+    "At five": { time: "5:00" },
+    "At six": { time: "6:00" },
+    "At seven": { time: "7:00" },
+    "At eight": { time: "8:00" },
+    "At nine": { time: "9:00" },
+    "At 10:00 o'clock.": { time: "10:00" },
+    "At 11:00 o'clock.": { time: "11:00" },
+    "At 12:00 o'clock.": { time: "12:00" },
+    "At 1:00 o'clock.": { time: "1:00" },
+    "At 2:00 o'clock.": { time: "2:00" },
+    "At 3:00 o'clock.": { time: "3:00" },
+    "At 4:00 o'clock.": { time: "4:00" },
+    "At 5:00 o'clock.": { time: "5:00" },
+    "At 6:00 o'clock.": { time: "6:00" },
+    "At 7:00 o'clock.": { time: "7:00" },
+    "At 8:00 o'clock.": { time: "8:00" },
+    "At 9:00 o'clock.": { time: "9:00" },
+    "10:00 o'clock.": { time: "10:00" },
+    "11:00 o'clock.": { time: "11:00" },
+    "12:00 o'clock.": { time: "12:00" },
+    "1:00 o'clock.": { time: "1:00" },
+    "2:00 o'clock.": { time: "2:00" },
+    "3:00 o'clock.": { time: "3:00" },
+    "4:00 o'clock.": { time: "4:00" },
+    "5:00 o'clock.": { time: "5:00" },
+    "6:00 o'clock.": { time: "6:00" },
+    "7:00 o'clock.": { time: "7:00" },
+    "8:00 o'clock.": { time: "8:00" },
+    "9:00 o'clock.": { time: "9:00" },
 }
 
 const ans_grammar: { [index: string]: { confirmation?: string, negation?: string } } = {
@@ -90,6 +126,7 @@ const dec_grammar: { [index: string]: { meeting?: string, celebrity?: string } }
     "I want to ask.": { celebrity: "Yes" },
     "Somebody.": { celebrity: "Yes" },
     "Someone.": { celebrity: "Yes" },
+    "Ask.": { celebrity: "Yes" },
 }
 
 export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
@@ -117,7 +154,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                     {
                         target: 'celebrity',
                         cond: (context) => "celebrity" in (dec_grammar[context.recResult[0].utterance] || {}),
-                        actions: assign({ celebrity: (context) => dec_grammar[context.recResult[0].utterance].celebrity! })
                     },
                     {
                         target: '.nomatch'
@@ -145,7 +181,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 RECOGNISED: [
                     {
                         target: 'getCeleb',
-                        actions: assign({ person: (context) => context.recResult[0].utterance })
+                        actions: assign({ celebrity: (context) => context.recResult[0].utterance })
                     },
                 ],
                 TIMEOUT: '.prompt'
@@ -167,7 +203,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
         getCeleb: {
             invoke: {
                 id: 'getInfo',
-                src: (context, event) => kbRequest(context.person),
+                src: (context, event) => kbRequest(context.celebrity),
                 onDone: {
                     target: 'celebMeeting',
                     actions: [
@@ -186,7 +222,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 RECOGNISED: [
                     {
                         target: 'date',
-                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {})
+                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                        actions: assign({ title: (context) => `meeting with ${context.celebrity}` })
+                    },
+                    {
+                        target: 'celebrity',
+                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                     },
                     {
                         target: '.nomatch'
@@ -198,7 +239,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 prompt: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `${context.info}`
+                        value: `${context.info} Do you want to meet ${context.celebrity}?`
                     })),
                     on: { ENDSPEECH: 'ask' }
                 },

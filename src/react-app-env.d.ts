@@ -40,7 +40,6 @@ interface SDSContext {
     day: string;
     time: string;
     celebrity: string;
-    person: string;
     info: string;
 }
 
