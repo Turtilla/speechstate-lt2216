@@ -33,6 +33,13 @@ const grammar: { [index: string]: { title?: string, day?: string, time?: string 
     "Friday.": { day: "Friday" },
     "Saturday.": { day: "Saturday" },
     "Sunday.": { day: "Sunday" },
+    "Monday": { day: "Monday" },
+    "Tuesday": { day: "Tuesday" },
+    "Wednesday": { day: "Wednesday" },
+    "Thursday": { day: "Thursday" },
+    "Friday": { day: "Friday" },
+    "Saturday": { day: "Saturday" },
+    "Sunday": { day: "Sunday" },
     "Today": { day: "today" },
     "Tomorrow.": { day: "tomorrow" },
 
