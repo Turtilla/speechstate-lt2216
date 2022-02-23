@@ -303,13 +303,20 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         target: '.nomatch'
                     }
                 ],
-                TIMEOUT: '.prompt'
+                TIMEOUT: '.question'
             },
             states: {
                 prompt: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `${context.info} Do you want to meet ${context.celebrity}?`
+                        value: `${context.info}`
+                    })),
+                    on: { ENDSPEECH: 'question' }
+                },
+                question: {
+                    entry: send((context) => ({
+                        type: 'SPEAK',
+                        value: `Do you want to meet ${context.celebrity}?`
                     })),
                     on: { ENDSPEECH: 'ask' }
                 },
