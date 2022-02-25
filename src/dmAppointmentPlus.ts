@@ -131,7 +131,7 @@ const grammar: { [index: string]: { title?: string, day?: string, time?: string 
     "9:00 o'clock": { time: "9:00" },
 }
 
-const ans_grammar: { [index: string]: { confirmation?: string, negation?: string } } = {
+const ans_grammar: { [index: string]: { confirmation?: string, negation?: string, help?: string } } = {
 
     "Yes.": { confirmation: "Yes" },
     "Yeah.": { confirmation: "Yes" },
@@ -141,7 +141,8 @@ const ans_grammar: { [index: string]: { confirmation?: string, negation?: string
     "No.": { negation: "No" },
     "Nope.": { negation: "No" },
     "No way.": { negation: "No" },
-    "Not what I said.": { negation: "No" }
+    "Not what I said.": { negation: "No" },
+    "Help.": { help: "Help" }
 }
 
 const dec_grammar: { [index: string]: { meeting?: string, celebrity?: string } } = {
@@ -169,393 +170,455 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 CLICK: 'init'
             }
         },
+
         init: {
             on: {
-                TTS_READY: 'askForName',
-                CLICK: 'askForName'
+                TTS_READY: 'appointmentApp',
+                CLICK: 'appointmentApp'
             }
         },
 
-        askForName: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'greet',
-                        actions: assign({ username: (context) => context.recResult[0].utterance })
+        getHelp: {
+            initial: 'explain',
+            states: {
+                explain: {
+                    entry: say(`Please make sure to speak slowly and clearly so that the system understands you. Please give simple answers. It's enough to just say one word like lunch, yes, or Tuesday.`),
+                    on: { ENDSPEECH: '#root.dm.appointmentApp.hist' },
+                }
+            }
+        },
+
+        appointmentApp: {
+            initial: 'askForName',
+            states: {
+                hist: {
+                    type: 'history',
+                },
+
+                askForName: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: 'greet',
+                                actions: assign({ username: (context) => context.recResult[0].utterance })
+                            }
+                        ],
+                        TIMEOUT: { actions: assign({ counter: (context) => +1.0 }), target: '.prompt'}
+                    },
+                    states: {
+                        prompt: {
+                            entry: say("Hi, what's your name?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
                     }
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("Hi, what's your name?"),
-                    on: { ENDSPEECH: 'ask' }
                 },
-                ask: {
-                    entry: send('LISTEN'),
-                }
-            }
-        },
 
-        greet: {
-            entry: send((context) => ({
-                type: 'SPEAK',
-                value: `Welcome, ${context.username}.`
-            })),
-            on: { ENDSPEECH: 'welcome' }
-        },
-
-        welcome: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'purpose',
-                        cond: (context) => "meeting" in (dec_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: 'celebrity',
-                        cond: (context) => "celebrity" in (dec_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: '.nomatch'
-                    }
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("Do you want to create a meeting or ask about somebody?"),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I didn't understand that. Can you repeat?"),
-                    on: { ENDSPEECH: 'ask' }
-                }
-            }
-        },
-
-        celebrity: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'confirmCeleb',
-                        actions: assign({ celebrity: (context) => context.recResult[0].utterance })
-                    },
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("Who do you want to know about?"),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                ask: {
-                    entry: send('LISTEN'),
-                }
-            }
-        },
-
-        confirmCeleb: {
-            entry: send((context) => ({
-                type: 'SPEAK',
-                value: `OK, looking for information about ${context.celebrity}`
-            })),
-            on: { ENDSPEECH: 'getCeleb' }
-        },
-
-        getCeleb: {
-            invoke: {
-                id: 'getInfo',
-                src: (context, event) => kbRequest(context.celebrity),
-                onDone: {
-                    target: 'celebMeeting',
-                    actions: [
-                        assign({ info: (context, event) => event.data.AbstractText }),
-                        (context, event) => console.log(context, event)
-                        ]
-                },
-                onError: {
-                    target: 'celebrity'
-                }
-            }
-        },
-
-        celebMeeting: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'date',
-                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                        actions: assign({ title: (context) => `meeting with ${context.celebrity}` })
-                    },
-                    {
-                        target: 'welcome',
-                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: '.nomatch'
-                    }
-                ],
-                TIMEOUT: '.question'
-            },
-            states: {
-                prompt: {
+                greet: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `${context.info}`
+                        value: `Welcome, ${context.username}.`
                     })),
-                    on: { ENDSPEECH: 'question' }
+                    on: { ENDSPEECH: 'welcome' }
                 },
-                question: {
+
+                welcome: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'purpose',
+                                cond: (context) => "meeting" in (dec_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: 'celebrity',
+                                cond: (context) => "celebrity" in (dec_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch'
+                            }
+                        ],
+                        TIMEOUT: '.prompt'
+                    },
+                    states: {
+                        prompt: {
+                            entry: say("Do you want to create a meeting or ask about somebody?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I didn't understand that. Can you repeat?"),
+                            on: { ENDSPEECH: 'ask' }
+                        }
+                    }
+                },
+
+                celebrity: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: 'confirmCeleb',
+                                actions: assign({ celebrity: (context) => context.recResult[0].utterance })
+                            },
+                        ],
+                        TIMEOUT: '.prompt'
+                    },
+                    states: {
+                        prompt: {
+                            entry: say("Who do you want to know about?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        }
+                    }
+                },
+
+                confirmCeleb: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `Do you want to meet ${context.celebrity}?`
+                        value: `OK, looking for information about ${context.celebrity}`
                     })),
-                    on: { ENDSPEECH: 'ask' }
+                    on: { ENDSPEECH: 'getCeleb' }
                 },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I didn't get it. Can you please repeat."),
-                    on: { ENDSPEECH: 'ask' }
-                }
-            }
-        },
 
-        purpose: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'info',
-                        cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}),
-                        actions: assign({ title: (context) => grammar[context.recResult[0].utterance].title! })
-                    },
-                    {
-                        target: '.nomatch'
+                getCeleb: {
+                    invoke: {
+                        id: 'getInfo',
+                        src: (context, event) => kbRequest(context.celebrity),
+                        onDone: {
+                            target: 'celebMeeting',
+                            actions: [
+                                assign({ info: (context, event) => event.data.AbstractText }),
+                                (context, event) => console.log(context, event)
+                            ]
+                        },
+                        onError: {
+                            target: 'celebrity'
+                        }
                     }
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("What is it about?"),
-                    on: { ENDSPEECH: 'ask' }
                 },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I don't know what it is. Tell me something I know."),
-                    on: { ENDSPEECH: 'ask' }
-                }
-            }
-        },
 
-        info: {
-            entry: send((context) => ({
-                type: 'SPEAK',
-                value: `OK, ${context.title}`
-            })),
-            on: { ENDSPEECH: 'date' }
-        },
-
-        date: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'info2',
-                        cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}),
-                        actions: assign({ day: (context) => grammar[context.recResult[0].utterance].day! })
+                celebMeeting: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'date',
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ title: (context) => `meeting with ${context.celebrity}` })
+                            },
+                            {
+                                target: 'welcome',
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch'
+                            }
+                        ],
+                        TIMEOUT: '.question'
                     },
-                    {
-                        target: '.nomatch'
+                    states: {
+                        prompt: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `${context.info}`
+                            })),
+                            on: { ENDSPEECH: 'question' }
+                        },
+                        question: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Do you want to meet ${context.celebrity}?`
+                            })),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I didn't get it. Can you please repeat."),
+                            on: { ENDSPEECH: 'ask' }
+                        }
                     }
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("On which day is this meeting going to be?"),
-                    on: { ENDSPEECH: 'ask' }
                 },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I don't know what day it is. Could you repeat?"),
-                    on: { ENDSPEECH: 'ask' }
-                }
-            }
-        },
 
-        time: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'info3',
-                        cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}),
-                        actions: assign({ time: (context) => grammar[context.recResult[0].utterance].time! })
+                purpose: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'info',
+                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ title: (context) => grammar[context.recResult[0].utterance].title! })
+                            },
+                            {
+                                target: '..getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch'
+                            }
+                        ],
+                        TIMEOUT: '.prompt'
                     },
-                    {
-                        target: '.nomatch'
+                    states: {
+                        prompt: {
+                            entry: say("What is it about?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I don't know what it is. Tell me something I know."),
+                            on: { ENDSPEECH: 'ask' }
+                        }
                     }
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("What time is your meeting?"),
-                    on: { ENDSPEECH: 'ask' }
                 },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I didn't hear what time it was supposed to be. Could you repeat?"),
-                    on: { ENDSPEECH: 'ask' }
-                }
-            }
-        },
 
-        info2: {
-            entry: send((context) => ({
-                type: 'SPEAK',
-                value: `OK, ${context.day}`
-            })),
-            on: { ENDSPEECH: 'allDay' }
-        },
-
-        info3: {
-            entry: send((context) => ({
-                type: 'SPEAK',
-                value: `OK, ${context.time}`
-            })),
-            on: { ENDSPEECH: 'confirmTime' }
-        },
-
-        allDay: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'confirmAllDay',
-                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: 'time',
-                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: '.nomatch'
-                    }
-                ],
-                TIMEOUT: '.prompt'
-            },
-
-            states: {
-                prompt: {
-                    entry: say("Will it take the whole day?"),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I didn't get it. Could you repeat?"),
-                    on: { ENDSPEECH: 'ask' }
-                }
-            }
-        },
-
-        confirmAllDay: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'success',
-                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: 'welcome',
-                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: '.nomatch'
-                    }
-                ],
-                TIMEOUT: '.prompt'
-            },
-
-            states: {
-                prompt: {
+                info: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} for the whole day?`
+                        value: `OK, ${context.title}`
                     })),
-                    on: { ENDSPEECH: 'ask' }
+                    on: { ENDSPEECH: 'date' }
                 },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I didn't get it. Could you repeat?"),
-                    on: { ENDSPEECH: 'ask' }
-                }
-            }
-        },
 
-        confirmTime: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'success',
-                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                date: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'info2',
+                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ day: (context) => grammar[context.recResult[0].utterance].day! })
+                            },
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch'
+                            }
+                        ],
+                        TIMEOUT: '.prompt'
                     },
-                    {
-                        target: 'welcome',
-                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: '.nomatch'
+                    states: {
+                        prompt: {
+                            entry: say("On which day is this meeting going to be?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I don't know what day it is. Could you repeat?"),
+                            on: { ENDSPEECH: 'ask' }
+                        }
                     }
-                ],
-                TIMEOUT: '.prompt'
-            },
+                },
 
-            states: {
-                prompt: {
+                time: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'info3',
+                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ time: (context) => grammar[context.recResult[0].utterance].time! })
+                            },
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch'
+                            }
+                        ],
+                        TIMEOUT: '.prompt'
+                    },
+                    states: {
+                        prompt: {
+                            entry: say("What time is your meeting?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I didn't hear what time it was supposed to be. Could you repeat?"),
+                            on: { ENDSPEECH: 'ask' }
+                        }
+                    }
+                },
+
+                info2: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} at ${context.time}?`
+                        value: `OK, ${context.day}`
                     })),
-                    on: { ENDSPEECH: 'ask' }
+                    on: { ENDSPEECH: 'allDay' }
                 },
-                ask: {
-                    entry: send('LISTEN'),
+
+                info3: {
+                    entry: send((context) => ({
+                        type: 'SPEAK',
+                        value: `OK, ${context.time}`
+                    })),
+                    on: { ENDSPEECH: 'confirmTime' }
                 },
-                nomatch: {
-                    entry: say("Sorry, I didn't get it. Could you repeat?"),
-                    on: { ENDSPEECH: 'ask' }
-                }
+
+                allDay: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'confirmAllDay',
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: 'time',
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch'
+                            }
+                        ],
+                        TIMEOUT: '.prompt'
+                    },
+
+                    states: {
+                        prompt: {
+                            entry: say("Will it take the whole day?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I didn't get it. Could you repeat?"),
+                            on: { ENDSPEECH: 'ask' }
+                        }
+                    }
+                },
+
+                confirmAllDay: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'success',
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: 'welcome',
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch'
+                            }
+                        ],
+                        TIMEOUT: '.prompt'
+                    },
+
+                    states: {
+                        prompt: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} for the whole day?`
+                            })),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I didn't get it. Could you repeat?"),
+                            on: { ENDSPEECH: 'ask' }
+                        }
+                    }
+                },
+
+                confirmTime: {
+                    initial: 'prompt',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'success',
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: 'welcome',
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch'
+                            }
+                        ],
+                        TIMEOUT: '.prompt'
+                    },
+
+                    states: {
+                        prompt: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} at ${context.time}?`
+                            })),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I didn't get it. Could you repeat?"),
+                            on: { ENDSPEECH: 'ask' }
+                        }
+                    }
+                },
+
+                success: {
+                    entry: say(`Your meeting has been created!`),
+                    on: { ENDSPEECH: '#root.dm.init' }
+                },
             }
         },
 
-        success: {
-            entry: say(`Your meeting has been created!`),
-            on: { ENDSPEECH: 'init' }  
-        }
+
     }
 })
 
