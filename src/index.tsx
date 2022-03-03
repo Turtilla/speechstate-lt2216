@@ -134,7 +134,7 @@ const machine = Machine<SDSContext, any, SDSEvent>({
                                 'recStart',
                                 send(
                                     { type: 'TIMEOUT' },
-                                    { delay: (context) => (1000 * (context.tdmPassivity || defaultPassivity)), id: 'timeout' }
+                                    { delay: (context) => (500 * (context.tdmPassivity || defaultPassivity)), id: 'timeout' }
                                 )],
                             on: {
                                 TIMEOUT: '#root.asrtts.idle',

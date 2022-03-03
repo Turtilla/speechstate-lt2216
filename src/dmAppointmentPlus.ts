@@ -142,7 +142,10 @@ const ans_grammar: { [index: string]: { confirmation?: string, negation?: string
     "Nope.": { negation: "No" },
     "No way.": { negation: "No" },
     "Not what I said.": { negation: "No" },
-    "Help.": { help: "Help" }
+    "Help.": { help: "Help" },
+    "Help me.": { help: "Help" },
+    "I don't know what to do.": { help: "Help" },
+    "I don't know what to say.": { help: "Help" }
 }
 
 const dec_grammar: { [index: string]: { meeting?: string, celebrity?: string } } = {
@@ -162,8 +165,10 @@ const dec_grammar: { [index: string]: { meeting?: string, celebrity?: string } }
     "Ask.": { celebrity: "Yes" },
 }
 
+
 export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
     initial: 'idle',
+    entry: assign({ counter: (context) => 0 }),
     states: {
         idle: {
             on: {
@@ -174,7 +179,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
         init: {
             on: {
                 TTS_READY: 'appointmentApp',
-                CLICK: 'appointmentApp'
+                CLICK: 'appointmentApp',
             }
         },
 
@@ -182,7 +187,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
             initial: 'explain',
             states: {
                 explain: {
-                    entry: say(`Please make sure to speak slowly and clearly so that the system understands you. Please give simple answers. It's enough to just say one word like lunch, yes, or Tuesday.`),
+                    entry: say(`Please make sure to speak slowly and clearly so that the system understands you.`),
                     on: { ENDSPEECH: '#root.dm.appointmentApp.hist' },
                 }
             }
@@ -194,9 +199,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 hist: {
                     type: 'history',
                 },
-
+                deepHist: {
+                    type: 'history',
+                    history: 'deep'
+                },
                 askForName: {
-                    initial: 'prompt',
+                    initial: 'choose',
                     on: {
                         RECOGNISED: [
                             {
@@ -205,15 +213,38 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             },
                             {
                                 target: 'greet',
-                                actions: assign({ username: (context) => context.recResult[0].utterance })
+                                cond: (context) => context.recResult[0].confidence > 0.6,
+                                actions: [assign({ username: (context) => context.recResult[0].utterance }), assign({ counter: (context) => 0 })]
                             }
                         ],
-                        TIMEOUT: { actions: assign({ counter: (context) => +1.0 }), target: '.prompt'}
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter+1 }), target: '.choose' }
                     },
                     states: {
-                        prompt: {
-                            entry: say("Hi, what's your name?"),
-                            on: { ENDSPEECH: 'ask' }
+                        choose: {
+                                always: [
+                                    { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                    { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                    { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                    { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                ]
+                        },
+                        prompt1: {
+                            entry: say("What's your name?"),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        prompt2: {
+                            entry: say("What should I call you?"),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        prompt3: {
+                            entry: say("Please tell me your name."),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
                         },
                         ask: {
                             entry: send('LISTEN'),
@@ -230,44 +261,63 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 },
 
                 welcome: {
-                    initial: 'prompt',
+                    initial: 'choose',
                     on: {
                         RECOGNISED: [
                             {
                                 target: 'purpose',
-                                cond: (context) => "meeting" in (dec_grammar[context.recResult[0].utterance] || {}),
+                                cond: (context) => "meeting" in (dec_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
+                                actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: 'celebrity',
-                                cond: (context) => "celebrity" in (dec_grammar[context.recResult[0].utterance] || {}),
+                                cond: (context) => "celebrity" in (dec_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
+                                actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: '#root.dm.getHelp',
                                 cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
                             },
                             {
-                                target: '.nomatch'
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 })
                             }
                         ],
-                        TIMEOUT: '.prompt'
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
                     states: {
-                        prompt: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
                             entry: say("Do you want to create a meeting or ask about somebody?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt2: {
+                            entry: say("Would you prefer to create a new meeting or ask about a celebrity?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: say("Please tell me if you want to make a meeting or ask about a famous person."),
                             on: { ENDSPEECH: 'ask' }
                         },
                         ask: {
                             entry: send('LISTEN'),
                         },
                         nomatch: {
-                            entry: say("Sorry, I didn't understand that. Can you repeat?"),
-                            on: { ENDSPEECH: 'ask' }
+                            entry: say("Sorry, I didn't understand that."),
+                            on: { ENDSPEECH: 'choose' }
                         }
                     }
                 },
 
                 celebrity: {
-                    initial: 'prompt',
+                    initial: 'choose',
                     on: {
                         RECOGNISED: [
                             {
@@ -276,14 +326,30 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             },
                             {
                                 target: 'confirmCeleb',
-                                actions: assign({ celebrity: (context) => context.recResult[0].utterance })
+                                actions: [assign({ celebrity: (context) => context.recResult[0].utterance }), assign({ counter: (context) => 0 })]
                             },
                         ],
-                        TIMEOUT: '.prompt'
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
                     states: {
-                        prompt: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
                             entry: say("Who do you want to know about?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt2: {
+                            entry: say("What celebrity would you like to hear about?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: say("Please tell me the name of the person you want me to tell you about."),
                             on: { ENDSPEECH: 'ask' }
                         },
                         ask: {
@@ -324,21 +390,23 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             {
                                 target: 'date',
                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                actions: assign({ title: (context) => `meeting with ${context.celebrity}` })
+                                actions: [assign({ title: (context) => `meeting with ${context.celebrity}` }), assign({ counter: (context) => 0 }),]
                             },
                             {
                                 target: 'welcome',
                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => 0 }),
                             },
                             {
                                 target: '#root.dm.getHelp',
                                 cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
                             },
                             {
-                                target: '.nomatch'
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 }),
                             }
                         ],
-                        TIMEOUT: '.question'
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
                     states: {
                         prompt: {
@@ -346,12 +414,34 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 type: 'SPEAK',
                                 value: `${context.info}`
                             })),
-                            on: { ENDSPEECH: 'question' }
+                            on: { ENDSPEECH: 'choose' }
                         },
-                        question: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
                                 value: `Do you want to meet ${context.celebrity}?`
+                            })),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt2: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Would you like to meet ${context.celebrity}?`
+                            })),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Should I schedule you a meeting with ${context.celebrity}?`
                             })),
                             on: { ENDSPEECH: 'ask' }
                         },
@@ -359,34 +449,51 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             entry: send('LISTEN'),
                         },
                         nomatch: {
-                            entry: say("Sorry, I didn't get it. Can you please repeat."),
-                            on: { ENDSPEECH: 'ask' }
+                            entry: say("Sorry, I didn't get it."),
+                            on: { ENDSPEECH: 'choose' }
                         }
                     }
                 },
 
                 purpose: {
-                    initial: 'prompt',
+                    initial: 'choose',
                     on: {
                         RECOGNISED: [
                             {
                                 target: 'info',
                                 cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}),
-                                actions: assign({ title: (context) => grammar[context.recResult[0].utterance].title! })
+                                actions: [assign({ title: (context) => grammar[context.recResult[0].utterance].title! }), assign({ counter: (context) => 0 }),]
                             },
                             {
-                                target: '..getHelp',
+                                target: '#root.dm.getHelp',
                                 cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
                             },
                             {
-                                target: '.nomatch'
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 }),
                             }
                         ],
-                        TIMEOUT: '.prompt'
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
                     states: {
-                        prompt: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
                             entry: say("What is it about?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt2: {
+                            entry: say("What is your meeting about?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: say("Please tell me the purpose of your meeting."),
                             on: { ENDSPEECH: 'ask' }
                         },
                         ask: {
@@ -394,7 +501,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         },
                         nomatch: {
                             entry: say("Sorry, I don't know what it is. Tell me something I know."),
-                            on: { ENDSPEECH: 'ask' }
+                            on: { ENDSPEECH: 'choose' }
                         }
                     }
                 },
@@ -408,69 +515,103 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 },
 
                 date: {
-                    initial: 'prompt',
+                    initial: 'choose',
                     on: {
                         RECOGNISED: [
                             {
                                 target: 'info2',
                                 cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}),
-                                actions: assign({ day: (context) => grammar[context.recResult[0].utterance].day! })
+                                actions: [assign({ day: (context) => grammar[context.recResult[0].utterance].day! }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '#root.dm.getHelp',
                                 cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
                             },
                             {
-                                target: '.nomatch'
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 }),
                             }
                         ],
-                        TIMEOUT: '.prompt'
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
                     states: {
-                        prompt: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
                             entry: say("On which day is this meeting going to be?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt2: {
+                            entry: say("What is the day of your meeting?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: say("Please tell me what day you plan this meeting for."),
                             on: { ENDSPEECH: 'ask' }
                         },
                         ask: {
                             entry: send('LISTEN'),
                         },
                         nomatch: {
-                            entry: say("Sorry, I don't know what day it is. Could you repeat?"),
-                            on: { ENDSPEECH: 'ask' }
+                            entry: say("Sorry, I did not understand what you said."),
+                            on: { ENDSPEECH: 'choose' }
                         }
                     }
                 },
 
                 time: {
-                    initial: 'prompt',
+                    initial: 'choose',
                     on: {
                         RECOGNISED: [
                             {
                                 target: 'info3',
                                 cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}),
-                                actions: assign({ time: (context) => grammar[context.recResult[0].utterance].time! })
+                                actions: [assign({ time: (context) => grammar[context.recResult[0].utterance].time! }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '#root.dm.getHelp',
                                 cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
                             },
                             {
-                                target: '.nomatch'
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 }),
                             }
                         ],
-                        TIMEOUT: '.prompt'
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
                     states: {
-                        prompt: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
                             entry: say("What time is your meeting?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt2: {
+                            entry: say("At what time will your meeting take place?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: say("Please tell me the hour to schedule your meeting for."),
                             on: { ENDSPEECH: 'ask' }
                         },
                         ask: {
                             entry: send('LISTEN'),
                         },
                         nomatch: {
-                            entry: say("Sorry, I didn't hear what time it was supposed to be. Could you repeat?"),
-                            on: { ENDSPEECH: 'ask' }
+                            entry: say("Sorry, I didn't hear what time it was supposed to be."),
+                            on: { ENDSPEECH: 'choose' }
                         }
                     }
                 },
@@ -492,112 +633,115 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 },
 
                 allDay: {
-                    initial: 'prompt',
+                    initial: 'choose',
                     on: {
                         RECOGNISED: [
                             {
                                 target: 'confirmAllDay',
                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: 'time',
                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: '#root.dm.getHelp',
                                 cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
                             },
                             {
-                                target: '.nomatch'
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 }),
                             }
                         ],
-                        TIMEOUT: '.prompt'
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
 
                     states: {
-                        prompt: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
                             entry: say("Will it take the whole day?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt2: {
+                            entry: say("Will your meeting take the whole day?"),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: say("Are you planning to spend your whole day on this meeting?"),
                             on: { ENDSPEECH: 'ask' }
                         },
                         ask: {
                             entry: send('LISTEN'),
                         },
                         nomatch: {
-                            entry: say("Sorry, I didn't get it. Could you repeat?"),
-                            on: { ENDSPEECH: 'ask' }
+                            entry: say("Sorry, I didn't get it."),
+                            on: { ENDSPEECH: 'choose' }
                         }
                     }
                 },
 
                 confirmAllDay: {
-                    initial: 'prompt',
+                    initial: 'choose',
                     on: {
                         RECOGNISED: [
                             {
                                 target: 'success',
                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: 'welcome',
                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: '#root.dm.getHelp',
                                 cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
                             },
                             {
-                                target: '.nomatch'
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 }),
                             }
                         ],
-                        TIMEOUT: '.prompt'
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
 
                     states: {
-                        prompt: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
                                 value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} for the whole day?`
                             })),
                             on: { ENDSPEECH: 'ask' }
                         },
-                        ask: {
-                            entry: send('LISTEN'),
-                        },
-                        nomatch: {
-                            entry: say("Sorry, I didn't get it. Could you repeat?"),
-                            on: { ENDSPEECH: 'ask' }
-                        }
-                    }
-                },
-
-                confirmTime: {
-                    initial: 'prompt',
-                    on: {
-                        RECOGNISED: [
-                            {
-                                target: 'success',
-                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                            },
-                            {
-                                target: 'welcome',
-                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                            },
-                            {
-                                target: '#root.dm.getHelp',
-                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
-                            },
-                            {
-                                target: '.nomatch'
-                            }
-                        ],
-                        TIMEOUT: '.prompt'
-                    },
-
-                    states: {
-                        prompt: {
+                        prompt2: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
-                                value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} at ${context.time}?`
+                                value: `Dear ${context.username}, should I create a meeting titled ${context.title} for ${context.day} for the whole day?`
+                            })),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `${context.username}, shall I schedule you a meeting titled ${context.title} for ${context.day} for the whole day?`
                             })),
                             on: { ENDSPEECH: 'ask' }
                         },
@@ -605,8 +749,74 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             entry: send('LISTEN'),
                         },
                         nomatch: {
-                            entry: say("Sorry, I didn't get it. Could you repeat?"),
+                            entry: say("Sorry, I didn't get it."),
+                            on: { ENDSPEECH: 'choose' }
+                        }
+                    }
+                },
+
+                confirmTime: {
+                    initial: 'choose',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: 'success',
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: 'welcome',
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
+                            },
+                            {
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 }),
+                            }
+                        ],
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
+                    },
+
+                    states: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `${context.username}, do you want me to create a meeting titled ${context.title} for ${context.day} at ${context.time}`
+                            })),
                             on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt2: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Dear ${context.username}, should I create a meeting titled ${context.title} for ${context.day} at ${context.time}`
+                            })),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        prompt3: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `${context.username}, shall I schedule you a meeting titled ${context.title} for ${context.day} at ${context.time}`
+                            })),
+                            on: { ENDSPEECH: 'ask' }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I didn't get it."),
+                            on: { ENDSPEECH: 'choose' }
                         }
                     }
                 },
