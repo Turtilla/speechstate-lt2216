@@ -45,6 +45,7 @@ interface SDSContext {
     category: string;
     joke: string;
     counter: number;
+    uncertain: string;
 }
 
 type SDSEvent =
