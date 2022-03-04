@@ -228,7 +228,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     { target: 'prompt1', cond: (context) => context.counter === 0 },
                                     { target: 'prompt2', cond: (context) => context.counter === 1 },
                                     { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                    { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                    { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                                 ]
                         },
                         prompt1: {
@@ -339,7 +339,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {
@@ -487,7 +487,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {
@@ -614,7 +614,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {
@@ -679,7 +679,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {
@@ -788,7 +788,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {
@@ -887,7 +887,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {
@@ -1003,7 +1003,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {
@@ -1060,7 +1060,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {
@@ -1126,7 +1126,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
-                                { target: '#root.dm.idle', cond: (context) => context.counter === 3 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
                             ]
                         },
                         prompt1: {

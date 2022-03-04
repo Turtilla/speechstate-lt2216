@@ -1,3 +1,4 @@
+import { getCipherInfo } from "crypto";
 import { MachineConfig, send, Action, assign } from "xstate";
 
 
@@ -5,9 +6,13 @@ function say(text: string): Action<SDSContext, SDSEvent> {
     return send((_context: SDSContext) => ({ type: "SPEAK", value: text }))
 }
 
-
-const kbRequest = (text: string) =>
-    fetch(new Request(`https://cors.eu.org/https://api.duckduckgo.com/?q=${text}&format=json&skip_disambig=1`)).then(data => data.json())
+const rasaurl = 'https://dialogue-systems.herokuapp.com/model/parse'
+const nluRequest = (text: string) =>
+    fetch(new Request(rasaurl, {
+        method: 'POST',
+        body: `{"text": "${text}"}`
+    }))
+        .then(data => data.json());
 
 const grammar: { [index: string]: { intent?: string } } = {
     "vacuum": { intent: "vacuum" },
@@ -50,8 +55,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
 
         init: {
             on: {
-                TTS_READY: 'appointmentApp',
-                CLICK: 'appointmentApp',
+                TTS_READY: 'botApp',
+                CLICK: 'botApp',
             }
         },
 
@@ -130,21 +135,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 purpose: {
                     initial: 'choose',
                     on: {
-                        RECOGNISED: [
-                            {
-                                target: 'info',
-                                cond: (context) => "intent" in (grammar[context.recResult[0].utterance] || {}),
-                                actions: [assign({ title: (context) => grammar[context.recResult[0].utterance].intent! }), assign({ counter: (context) => 0 }),]
-                            },
-                            {
-                                target: '#root.dm.getHelp',
-                                cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
-                            },
-                            {
-                                target: '.nomatch',
-                                actions: assign({ counter: (context) => context.counter + 1 }),
-                            }
-                        ],
+                        RECOGNISED: { actions: assign({ counter: (context) => 0 }), target: 'getIntent' },
                         TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
                     },
                     states: {
@@ -178,6 +169,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                     }
                 },
 
+                getIntent: {
+                    invoke: {
+                        id: 'identifyIntent',
+                        src: (context, event) => nluRequest(context.recResult[0].utterance),
+                        onDone: {
+                            target: 'confirmAction',
+                            actions: [(context, event) => console.log(context, event), assign({ intent: (context, event) => event.data.intent.name }), assign({ title: (context) => grammar[context.intent].intent! })]
+                        },
+                        onError: {
+                            target: 'purpose'
+						}
+
+					}
+                },
+
                 confirmAction: {
                     initial: 'choose',
                     on: {
@@ -188,7 +194,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
-                                target: 'welcome',
+                                target: 'purpose',
                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                 actions: assign({ counter: (context) => 0 })
                             },
@@ -253,8 +259,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 },
             }
         },
-
-
     }
 })
 
