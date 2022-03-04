@@ -211,12 +211,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             },
                             {
                                 target: 'greet',
-                                cond: (context) => context.recResult[0].confidence > 0.9,
+                                cond: (context) => context.recResult[0].confidence > 0.6,
                                 actions: [assign({ username: (context) => context.recResult[0].utterance }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '.makeSureName',
-                                cond: (context) => context.recResult[0].confidence <= 0.9,
+                                cond: (context) => context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             }
                         ],
@@ -387,8 +387,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             states: {
                                 choose: {
                                     always: [
-                                        { target: '#root.dm.appointmentApp.purpose', cond: (context) => context.recResult[0].confidence > 0.9, },
-                                        { target: 'makeSure', cond: (context) => context.recResult[0].confidence <= 0.9, },
+                                        { target: '#root.dm.appointmentApp.purpose', cond: (context) => context.recResult[0].confidence > 0.6, },
+                                        { target: 'makeSure', cond: (context) => context.recResult[0].confidence <= 0.6, },
                                     ]
                                 },
                                 makeSure: {
@@ -435,8 +435,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             states: {
                                 choose: {
                                     always: [
-                                        { target: '#root.dm.appointmentApp.celebrity', cond: (context) => context.recResult[0].confidence > 0.9, },
-                                        { target: 'makeSure', cond: (context) => context.recResult[0].confidence <= 0.9, },
+                                        { target: '#root.dm.appointmentApp.celebrity', cond: (context) => context.recResult[0].confidence > 0.6, },
+                                        { target: 'makeSure', cond: (context) => context.recResult[0].confidence <= 0.6, },
                                     ]
                                 },
                                 makeSure: {
@@ -470,12 +470,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             },
                             {
                                 target: 'confirmCeleb',
-                                cond: (context) => context.recResult[0].confidence > 0.9,
+                                cond: (context) => context.recResult[0].confidence > 0.6,
                                 actions: [assign({ celebrity: (context) => context.recResult[0].utterance }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '.makeSureCeleb',
-                                cond: (context) => context.recResult[0].confidence <= 0.9,
+                                cond: (context) => context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             }
                         ],
@@ -654,12 +654,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         RECOGNISED: [
                             {
                                 target: 'info',
-                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.9,
+                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: [assign({ title: (context) => grammar[context.recResult[0].utterance].title! }), assign({ counter: (context) => 0 }),]
                             },
                             {
                                 target: '.makeSurePurpose',
-                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.9,
+                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
@@ -763,12 +763,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         RECOGNISED: [
                             {
                                 target: 'info2',
-                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.9,
+                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: [assign({ day: (context) => grammar[context.recResult[0].utterance].day! }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '.makeSureDay',
-                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.9,
+                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
@@ -862,12 +862,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         RECOGNISED: [
                             {
                                 target: 'info3',
-                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.9,
+                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: [assign({ time: (context) => grammar[context.recResult[0].utterance].time! }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '.makeSureTime',
-                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.9,
+                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
