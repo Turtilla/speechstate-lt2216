@@ -215,12 +215,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             },
                             {
                                 target: 'greet',
-                                cond: (context) => context.recResult[0].confidence > 0.8,
+                                cond: (context) => context.recResult[0].confidence > 0.6,
                                 actions: [assign({ username: (context) => context.recResult[0].utterance }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '.makeSureName',
-                                cond: (context) => context.recResult[0].confidence <= 0.8,
+                                cond: (context) => context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             }
                         ],
@@ -262,22 +262,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.greet',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ username: (context) => context.uncertain }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.askForName',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -316,22 +316,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.greet',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ username: (context) => context.uncertain }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.askForName',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -369,22 +369,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.askForName',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.greet',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ username: (context) => context.uncertain }),]
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -487,21 +487,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.purpose',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: '.makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '.makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -516,8 +516,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             states: {
                                 choose: {
                                     always: [
-                                        { target: '#root.dm.appointmentApp.purpose', cond: (context) => context.recResult[0].confidence > 0.8, },
-                                        { target: 'makeSure', cond: (context) => context.recResult[0].confidence <= 0.8, },
+                                        { target: '#root.dm.appointmentApp.purpose', cond: (context) => context.recResult[0].confidence > 0.6, },
+                                        { target: 'makeSure', cond: (context) => context.recResult[0].confidence <= 0.6, },
                                     ]
                                 },
                                 makeSure: {
@@ -542,22 +542,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         RECOGNISED: [
                                             {
                                                 target: '#root.dm.appointmentApp.purpose',
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                                 actions: [assign({ counter: (context) => 0 })]
                                             },
                                             {
                                                 target: '#root.dm.appointmentApp.welcome',
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                                 actions: assign({ counter: (context) => context.counter + 1 }),
                                             },
                                             {
                                                 target: 'makeSureConfirmation',
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                                 actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                             },
                                             {
                                                 target: 'makeSureNegation',
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                                 actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                             },
                                             {
@@ -595,22 +595,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         RECOGNISED: [
                                             {
                                                 target: '#root.dm.appointmentApp.welcome',
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                                 actions: assign({ counter: (context) => context.counter + 1 }),
                                             },
                                             {
                                                 target: '#root.dm.appointmentApp.purpose',
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                                 actions: [assign({ counter: (context) => 0 })]
                                             },
                                             {
                                                 target: 'makeSureConfirmation',
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                                 actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                             },
                                             {
                                                 target: 'makeSureNegation',
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                                 actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                             },
                                             {
@@ -651,21 +651,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.celebrity',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: '.makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '.makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -680,8 +680,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             states: {
                                 choose: {
                                     always: [
-                                        { target: '#root.dm.appointmentApp.celebrity', cond: (context) => context.recResult[0].confidence > 0.8, },
-                                        { target: 'makeSure', cond: (context) => context.recResult[0].confidence <= 0.8, },
+                                        { target: '#root.dm.appointmentApp.celebrity', cond: (context) => context.recResult[0].confidence > 0.6, },
+                                        { target: 'makeSure', cond: (context) => context.recResult[0].confidence <= 0.6, },
                                     ]
                                 },
                                 makeSure: {
@@ -706,22 +706,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         RECOGNISED: [
                                             {
                                                 target: '#root.dm.appointmentApp.celebrity',
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                                 actions: [assign({ counter: (context) => 0 })]
                                             },
                                             {
                                                 target: '#root.dm.appointmentApp.welcome',
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                                 actions: assign({ counter: (context) => context.counter + 1 }),
                                             },
                                             {
                                                 target: 'makeSureConfirmation',
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                                 actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                             },
                                             {
                                                 target: 'makeSureNegation',
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                                 actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                             },
                                             {
@@ -759,22 +759,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         RECOGNISED: [
                                             {
                                                 target: '#root.dm.appointmentApp.welcome',
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                                 actions: assign({ counter: (context) => context.counter + 1 }),
                                             },
                                             {
                                                 target: '#root.dm.appointmentApp.celebrity',
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                                 actions: [assign({ counter: (context) => 0 })]
                                             },
                                             {
                                                 target: 'makeSureConfirmation',
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                                 actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                             },
                                             {
                                                 target: 'makeSureNegation',
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                                 actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                             },
                                             {
@@ -821,12 +821,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             },
                             {
                                 target: 'confirmCeleb',
-                                cond: (context) => context.recResult[0].confidence > 0.8,
+                                cond: (context) => context.recResult[0].confidence > 0.6,
                                 actions: [assign({ celebrity: (context) => context.recResult[0].utterance }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '.makeSureCeleb',
-                                cond: (context) => context.recResult[0].confidence <= 0.8,
+                                cond: (context) => context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             }
                         ],
@@ -862,22 +862,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.confirmCeleb',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ celebrity: (context) => context.uncertain }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.celebrity',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ celebrity: (context) => context.uncertain }),]
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -914,22 +914,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.confirmCeleb',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ username: (context) => context.uncertain }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.celebrity',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -967,22 +967,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.celebrity',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.confirmCeleb',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ username: (context) => context.uncertain }),]
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -1121,12 +1121,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         RECOGNISED: [
                             {
                                 target: 'info',
-                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: [assign({ title: (context) => grammar[context.recResult[0].utterance].title! }), assign({ counter: (context) => 0 }),]
                             },
                             {
                                 target: '.makeSurePurpose',
-                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "title" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
@@ -1174,21 +1174,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.info',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ title: (context) => grammar[context.uncertain].title! }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.purpose',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -1226,22 +1226,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.info',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ title: (context) => grammar[context.uncertain].title! }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.purpose',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -1279,22 +1279,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.purpose',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.info',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ title: (context) => grammar[context.uncertain].title! }),]
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -1344,12 +1344,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         RECOGNISED: [
                             {
                                 target: 'info2',
-                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: [assign({ day: (context) => grammar[context.recResult[0].utterance].day! }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '.makeSureDay',
-                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "day" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
@@ -1397,21 +1397,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.info2',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ day: (context) => grammar[context.uncertain].day! }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.date',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -1449,22 +1449,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.info2',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ day: (context) => grammar[context.uncertain].day! }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.date',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -1502,22 +1502,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.date',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.info2',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ day: (context) => grammar[context.uncertain].day! }),]
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -1559,12 +1559,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         RECOGNISED: [
                             {
                                 target: 'info3',
-                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: [assign({ time: (context) => grammar[context.recResult[0].utterance].time! }), assign({ counter: (context) => 0 })]
                             },
                             {
                                 target: '.makeSureTime',
-                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "time" in (grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
@@ -1612,21 +1612,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.info3',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ time: (context) => grammar[context.uncertain].time! }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.time',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -1664,22 +1664,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.info3',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ time: (context) => grammar[context.uncertain].time! }),]
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.time',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -1717,22 +1717,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.time',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.info3',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: [assign({ counter: (context) => 0 }), assign({ time: (context) => grammar[context.uncertain].time! }),]
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -1790,22 +1790,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         RECOGNISED: [
                             {
                                 target: 'confirmAllDay',
-                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: 'time',
-                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: '.makeSureDecision',
-                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
                                 target: '.makeSureDecision',
-                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
@@ -1854,21 +1854,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.confirmAllDay',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.time',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -1906,22 +1906,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.confirmAllDay',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.time',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -1959,22 +1959,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.time',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.confirmAllDay',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -2026,12 +2026,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             },
                             {
                                 target: '.makeSureDecision',
-                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
                                 target: '.makeSureDecision',
-                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
@@ -2089,21 +2089,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.success',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -2141,22 +2141,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.success',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -2194,22 +2194,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.success',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -2251,22 +2251,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         RECOGNISED: [
                             {
                                 target: 'success',
-                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: 'welcome',
-                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
                                 target: '.makeSureDecision',
-                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
                                 target: '.makeSureDecision',
-                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
@@ -2324,21 +2324,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.success',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                     },
                                     {
                                         target: '#root.dm.getHelp',
@@ -2376,22 +2376,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.success',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
@@ -2429,22 +2429,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: '#root.dm.appointmentApp.success',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
                                         actions: assign({ counter: (context) => 0 })
                                     },
                                     {
                                         target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
                                         target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.8,
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                         actions: assign({ uncertainAnswer: (context) => context.recResult[0].utterance }),
                                     },
                                     {
