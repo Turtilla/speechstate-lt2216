@@ -47,6 +47,7 @@ interface SDSContext {
     counter: number;
     uncertain: string;
     intent: string;
+    uncertainAnswer: string;
 }
 
 type SDSEvent =
