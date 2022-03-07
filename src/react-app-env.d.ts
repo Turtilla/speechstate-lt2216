@@ -40,6 +40,7 @@ interface SDSContext {
     title: string;
     day: string;
     time: string;
+    partner: string;
     celebrity: string;
     info: string;
     category: string;
@@ -48,6 +49,11 @@ interface SDSContext {
     uncertain: string;
     intent: string;
     uncertainAnswer: string;
+
+    dayCounter: number;
+    timeCounter: number;
+    partnerCounter: number;
+
 }
 
 type SDSEvent =
