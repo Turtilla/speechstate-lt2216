@@ -130,12 +130,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             initial: 'verify',
                             states: {
                                 verify: {     
-                                    on: {
-                                        entry: [
-                                            { cond: (context) => context.recResult[0].utterance.indexOf("Bob") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Bob" })], target: 'done' },
-                                            { cond: (context) => context.recResult[0].utterance.indexOf("Bob") === -1, target: 'done'},
-                                        ]
-                                    },
+                                    always: [
+                                        { cond: (context) => context.recResult[0].utterance.indexOf("Bob") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Bob" })], target: 'done' },
+                                        { cond: (context) => context.recResult[0].utterance.indexOf("Bob") === -1, target: 'done' },
+                                    ]
                                 },
                                 done: {
                                     type: 'final',
@@ -147,12 +145,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             initial: 'verify',
                             states: {
                                 verify: {
-                                    on: {
-                                        entry: [
-                                            { cond: (context) => context.recResult[0].utterance.indexOf("Friday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Friday" })], target: 'done' },
-                                            { cond: (context) => context.recResult[0].utterance.indexOf("Friday") === -1, target: 'done' },
-                                        ]
-                                    },
+                                    always: [
+                                        { cond: (context) => context.recResult[0].utterance.indexOf("Friday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Friday" })], target: 'done' },
+                                        { cond: (context) => context.recResult[0].utterance.indexOf("Friday") === -1, target: 'done' },
+                                    ]
                                 },
                                 done: {
                                     type: 'final',
@@ -164,12 +160,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             initial: 'verify',
                             states: {
                                 verify: {
-                                    on: {
-                                        entry: [
-                                            { cond: (context) => context.recResult[0].utterance.indexOf("noon") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "noon" })], target: 'done' },
-                                            { cond: (context) => context.recResult[0].utterance.indexOf("noon") === -1, target: 'done' },
-                                        ]
-                                    },
+                                    always: [
+                                        { cond: (context) => context.recResult[0].utterance.indexOf("noon") !== -1 || context.recResult[0].utterance.indexOf("Noon") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "noon" })], target: 'done' },
+                                        { cond: (context) => context.recResult[0].utterance.indexOf("noon") === -1 || context.recResult[0].utterance.indexOf("Noon") !== -1, target: 'done' },
+                                    ]
                                 },
                                 done: {
                                     type: 'final',
