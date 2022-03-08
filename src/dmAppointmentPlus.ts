@@ -1823,12 +1823,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
-                                target: '.makeSureDecision',
+                                target: '.makeSureConfirmation',
                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
-                                target: '.makeSureDecision',
+                                target: '.makeSureNegation',
                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
@@ -1871,58 +1871,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         nomatch: {
                             entry: say("Sorry, I didn't get it."),
                             on: { ENDSPEECH: 'choose' }
-                        },
-                        makeSureDecision: {
-                            initial: 'makeSure',
-                            on: {
-                                RECOGNISED: [
-                                    {
-                                        target: '#root.dm.appointmentApp.confirmAllDay',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
-                                        actions: assign({ counter: (context) => 0 })
-                                    },
-                                    {
-                                        target: '#root.dm.appointmentApp.time',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
-                                        actions: assign({ counter: (context) => 0 })
-                                    },
-                                    {
-                                        target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
-                                    },
-                                    {
-                                        target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
-                                    },
-                                    {
-                                        target: '#root.dm.getHelp',
-                                        cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                    },
-                                    {
-                                        target: '.nomatch',
-                                    }
-                                ],
-                                TIMEOUT: { target: '.makeSure' }
-                            },
-                            states: {
-                                makeSure: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `Did you mean ${context.uncertain}?`
-                                    })),
-                                    on: {
-                                        ENDSPEECH: 'ask'
-                                    }
-                                },
-                                ask: {
-                                    entry: send('LISTEN'),
-                                },
-                                nomatch: {
-                                    entry: say("Sorry, I did not get that."),
-                                    on: { ENDSPEECH: 'makeSure' }
-                                },
-
-                            },
                         },
                         makeSureConfirmation: {
                             initial: 'makeSure',
@@ -2049,12 +1997,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
-                                target: '.makeSureDecision',
+                                target: '.makeSureConfirmation',
                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
-                                target: '.makeSureDecision',
+                                target: '.makeSureNegation',
                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
@@ -2106,58 +2054,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         nomatch: {
                             entry: say("Sorry, I didn't get it."),
                             on: { ENDSPEECH: 'choose' }
-                        },
-                        makeSureDecision: {
-                            initial: 'makeSure',
-                            on: {
-                                RECOGNISED: [
-                                    {
-                                        target: '#root.dm.appointmentApp.success',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
-                                        actions: assign({ counter: (context) => 0 })
-                                    },
-                                    {
-                                        target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
-                                        actions: assign({ counter: (context) => 0 })
-                                    },
-                                    {
-                                        target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
-                                    },
-                                    {
-                                        target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
-                                    },
-                                    {
-                                        target: '#root.dm.getHelp',
-                                        cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                    },
-                                    {
-                                        target: '.nomatch',
-                                    }
-                                ],
-                                TIMEOUT: { target: '.makeSure' }
-                            },
-                            states: {
-                                makeSure: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `Did you mean ${context.uncertain}?`
-                                    })),
-                                    on: {
-                                        ENDSPEECH: 'ask'
-                                    }
-                                },
-                                ask: {
-                                    entry: send('LISTEN'),
-                                },
-                                nomatch: {
-                                    entry: say("Sorry, I did not get that."),
-                                    on: { ENDSPEECH: 'makeSure' }
-                                },
-
-                            },
                         },
                         makeSureConfirmation: {
                             initial: 'makeSure',
@@ -2284,12 +2180,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
-                                target: '.makeSureDecision',
+                                target: '.makeSureConfirmation',
                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
                             {
-                                target: '.makeSureDecision',
+                                target: '.makeSureNegation',
                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
                                 actions: [assign({ uncertain: (context) => context.recResult[0].utterance })]
                             },
@@ -2341,58 +2237,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         nomatch: {
                             entry: say("Sorry, I didn't get it."),
                             on: { ENDSPEECH: 'choose' }
-                        },
-                        makeSureDecision: {
-                            initial: 'makeSure',
-                            on: {
-                                RECOGNISED: [
-                                    {
-                                        target: '#root.dm.appointmentApp.success',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
-                                        actions: assign({ counter: (context) => 0 })
-                                    },
-                                    {
-                                        target: '#root.dm.appointmentApp.welcome',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence > 0.6,
-                                        actions: assign({ counter: (context) => 0 })
-                                    },
-                                    {
-                                        target: 'makeSureConfirmation',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
-                                    },
-                                    {
-                                        target: 'makeSureNegation',
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}) && context.recResult[0].confidence <= 0.6,
-                                    },
-                                    {
-                                        target: '#root.dm.getHelp',
-                                        cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                    },
-                                    {
-                                        target: '.nomatch',
-                                    }
-                                ],
-                                TIMEOUT: { target: '.makeSure' }
-                            },
-                            states: {
-                                makeSure: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `Did you mean ${context.uncertain}?`
-                                    })),
-                                    on: {
-                                        ENDSPEECH: 'ask'
-                                    }
-                                },
-                                ask: {
-                                    entry: send('LISTEN'),
-                                },
-                                nomatch: {
-                                    entry: say("Sorry, I did not get that."),
-                                    on: { ENDSPEECH: 'makeSure' }
-                                },
-
-                            },
                         },
                         makeSureConfirmation: {
                             initial: 'makeSure',
