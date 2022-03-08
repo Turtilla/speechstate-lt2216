@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Machine, assign, actions, State } from "xstate";
 import { useMachine, asEffect } from "@xstate/react";
 import { inspect } from "@xstate/inspect";
-import { dmMachine } from "./dmAppointmentPlus";
+import { dmMachine } from "./dmColourChanger";
 
 import createSpeechRecognitionPonyfill from 'web-speech-cognitive-services/lib/SpeechServices/SpeechToText'
 import createSpeechSynthesisPonyfill from 'web-speech-cognitive-services/lib/SpeechServices/TextToSpeech';
@@ -135,7 +135,7 @@ const machine = Machine<SDSContext, any, SDSEvent>({
                                 'recStart',
                                 send(
                                     { type: 'TIMEOUT' },
-                                    { delay: (context) => (500 * (context.tdmPassivity || defaultPassivity)), id: 'timeout' }
+                                    { delay: (context) => (1000 * (context.tdmPassivity || defaultPassivity)), id: 'timeout' }
                                 )],
                             on: {
                                 TIMEOUT: '#root.asrtts.idle',
