@@ -178,6 +178,7 @@ const dec_grammar: { [index: string]: { meeting?: string, celebrity?: string } }
     "I want to ask about a celebrity.": { celebrity: "Yes" },
     "Ask about a celebrity.": { celebrity: "Yes" },
     "A celebrity.": { celebrity: "Yes" },
+    "Celebrity.": { celebrity: "Yes" },
     "I want to ask about a famous person.": { celebrity: "Yes" },
     "Ask about a famous person.": { celebrity: "Yes" },
     "A famous person.": { celebrity: "Yes" },

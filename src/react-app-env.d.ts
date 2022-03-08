@@ -53,7 +53,6 @@ interface SDSContext {
     dayCounter: number;
     timeCounter: number;
     partnerCounter: number;
-
 }
 
 type SDSEvent =
