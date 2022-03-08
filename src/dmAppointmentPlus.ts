@@ -19,6 +19,15 @@ const grammar: { [index: string]: { title?: string, day?: string, time?: string 
     "Programming.": { title: "Programming the assignment with classmates" },
     "Video games.": { title: "Gaming with friends" },
     "Phone call.": { title: "A call with the family" },
+    "It's a lecture.": { title: "Dialogue systems lecture" },
+    "It's a lunch.": { title: "Lunch at the canteen" },
+    "It's cinema.": { title: "A movie at the cinema" },
+    "It's a walk.": { title: "A walk in the park" },
+    "It's a date.": { title: "A romantic date at a great restaurant" },
+    "It's a language course.": { title: "Swedish language course on zoom" },
+    "It's programming.": { title: "Programming the assignment with classmates" },
+    "It's video games.": { title: "Gaming with friends" },
+    "It's a phone call.": { title: "A call with the family" },
 
     "On Monday.": { day: "Monday" },
     "On Tuesday.": { day: "Tuesday" },
@@ -153,6 +162,10 @@ const dec_grammar: { [index: string]: { meeting?: string, celebrity?: string } }
 
     "I want to create a meeting.": { meeting: "Yes" },
     "Create a meeting.": { meeting: "Yes" },
+    "Create a new meeting.": { meeting: "Yes" },
+    "I want you to create a meeting.": { meeting: "Yes" },
+    "I want you to create a new meeting.": { meeting: "Yes" },
+    "Make a meeting.": { meeting: "Yes" },
     "A meeting.": { meeting: "Yes" },
     "I want a meeting.": { meeting: "Yes" },
     "Meeting.": { meeting: "Yes" },
@@ -162,6 +175,12 @@ const dec_grammar: { [index: string]: { meeting?: string, celebrity?: string } }
     "Ask about somebody.": { celebrity: "Yes" },
     "Ask about someone.": { celebrity: "Yes" },
     "I want to ask.": { celebrity: "Yes" },
+    "I want to ask about a celebrity.": { celebrity: "Yes" },
+    "Ask about a celebrity.": { celebrity: "Yes" },
+    "A celebrity.": { celebrity: "Yes" },
+    "I want to ask about a famous person.": { celebrity: "Yes" },
+    "Ask about a famous person.": { celebrity: "Yes" },
+    "A famous person.": { celebrity: "Yes" },
     "Somebody.": { celebrity: "Yes" },
     "Somebody": { celebrity: "Yes" },
     "Someone.": { celebrity: "Yes" },
@@ -339,7 +358,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         cond: (context) => "help" in (ans_grammar[context.recResult[0].utterance] || {}),
                                     },
                                     {
-                                        target: '.nomatch',
+                                        target: '.nomatch',  // I am aware that I essentially never ask for .nomatch statements that are below the threshold, but if they are not what the user meant, then this way they can 
+                                                             // say what they wanted to say faster, and if it is what the user meant, the system would not have understood it either way and asked them to reformulate or give
+                                                             // another answer. Thus, it is just skipping a step where a yes/no answer would not at all have made a difference regardless of whether or not the answer 'pinacolada' 
+                                                             // was intended for a question about the day of the meeting, it is not an acceptable answer and would lead back to the beginning of that state. I hope this is an 
+                                                             // acceptable explanation and solution to this issue. I can also imagine that it is possible to do this in a more abstracted away fashion, but I have not found a 
+                                                             // satisfactory solution to this so I had to rely on copy-pasting a lot of the code and changing the target states. 
                                     }
                                 ],
                                 TIMEOUT: { target: '.makeSure' }
