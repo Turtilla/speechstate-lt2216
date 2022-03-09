@@ -41,9 +41,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
             }
         },
 
-        // Initially I had more here, with asking for the username etc., but since it is not the focus of this assignment I removed it for simplicity's sake - the same goes for other functionalities from dmAppointmentPlus.ts, such
-        // as the confidence threshold or asking for help.
-
         greet: {
             entry: send((context) => ({
                 type: 'SPEAK',
@@ -51,28 +48,114 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
             })),
             on: {
                 entry: { actions: [assign({ partnerCounter: (context) => 0 }), assign({ dayCounter: (context) => 0 }), assign({ timeCounter: (context) => 0 })] },  // sets counters to 0
-                ENDSPEECH: 'question'
+                ENDSPEECH: 'fetchQuestions'
             }
         },
 
-        // Within this state you can find the whole form-filling behavior. Initially the state goes into a substate 'choose' where a suitable prompt is selected based on the information that the system has elicited from the
-        // user - so at the start it will always be 'prompt1'. This info is stored in context variables partner, day, and time, and whether that info has been stored is recorded in respective counters (whenever it is stored, the
-        // counter is set to 1). After the prompt is read out, the system listens for an answer moving to the parallel state 'formToFill', where simultaneously three substates exist and check for specific conditions. There is
-        // a number of conditions corresponding to different names, days, and times, and always one for when such information is not in the utterance. If it is, it gets stored in an appropriate variable and the counter is set to
-        // 1, and the substate goes to its final state. If there is no match, it just goes to final. Once all reach the final state, 'onDone' kicks in and moves us to the start of the state again, where the conditions for a
-        // different prompt are verified - so potentially a different and more specific question is asked. If all the slots/variables are filled, we move to the 'confirmTime' state, where the system repeats all that information
-        // and asks for a confirmation. Saying no resets it to point 0, saying yes finishes its work (and also resets the variables). 
+        fetchQuestions: {
+            invoke: {
+                id: 'getInfo',
+                src: (context, event) => kbRequest(context.celebrity), // can insert difficulty here with (context.difficulty) and ${text} in the function
+                onDone: {
+                    target: 'read',
+                    actions: [
+                        assign({ question1: (context, event) => event.data.results[0].question }),
+                        assign({ corrAnswer1: (context, event) => event.data.results[0].correct_answer }),
+                        assign({ incorrAnswerOne1: (context, event) => event.data.results[0].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo1: (context, event) => event.data.results[0].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree1: (context, event) => event.data.results[0].incorrect_answers[2] }),
 
-        // There are some issues here - for some reason the system does not recognize 'three' and 'At three' as fulfilling the conditions, while it does so with other times - but these are, I think, some voice recognition 
-        // peculiarities that I also noticed in the other assignments. Additionally, we can always override what we said before (if in the first sentence we omit the day but give a person and time, we can in the next one give a
-        // day and time and the latter time will be selected). I also wish I found an easier way to deal with multiple options (I was thinking of some sort of iterating over a list or a set), but this one works and does not look
-        // super complicated, it's just tougher to add a new entry than it would be with a simple list.
+                        assign({ question2: (context, event) => event.data.results[1].question }),
+                        assign({ corrAnswer2: (context, event) => event.data.results[1].correct_answer }),
+                        assign({ incorrAnswerOne2: (context, event) => event.data.results[1].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo2: (context, event) => event.data.results[1].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree2: (context, event) => event.data.results[1].incorrect_answers[2] }),
 
-        // I also believe that identifying the entities in these utterances could have been done with a well-trained RASA model, but I did not want to use it since mine is already trained for the dmAssistantBot.ts, and since this
-        // here seemed like a simpler solution for the time being, as I would need a ton of data to train RASA on to make it work this good, I think - a lot of different formulations that suggest that we are talking about a person,
-        // a day, or a time. It would of course, in the end, be more versatile, but I think getting it to work like that would have been beyond the scope of this assignment. This is why I decided to simply check for the presence
-        // of some specific substrings in the recognized utterances, and it works surprisingly well. Orthogonal states allow for the recognition of multiple elements at once, although I presume it could also have been done without
-        // those, just checking one after another, after another and storing the information either way - but this is a good exercise to understand how parallel states work. I hope this is enough of a comment on my design choices.
+                        assign({ question3: (context, event) => event.data.results[2].question }),
+                        assign({ corrAnswer3: (context, event) => event.data.results[2].correct_answer }),
+                        assign({ incorrAnswerOne3: (context, event) => event.data.results[2].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo3: (context, event) => event.data.results[2].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree3: (context, event) => event.data.results[2].incorrect_answers[2] }),
+
+                        assign({ question4: (context, event) => event.data.results[3].question }),
+                        assign({ corrAnswer4: (context, event) => event.data.results[3].correct_answer }),
+                        assign({ incorrAnswerOne4: (context, event) => event.data.results[3].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo4: (context, event) => event.data.results[3].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree4: (context, event) => event.data.results[3].incorrect_answers[2] }),
+
+                        assign({ question5: (context, event) => event.data.results[4].question }),
+                        assign({ corrAnswer5: (context, event) => event.data.results[4].correct_answer }),
+                        assign({ incorrAnswerOne5: (context, event) => event.data.results[4].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo5: (context, event) => event.data.results[4].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree5: (context, event) => event.data.results[4].incorrect_answers[2] }),
+
+                        assign({ question6: (context, event) => event.data.results[5].question }),
+                        assign({ corrAnswer6: (context, event) => event.data.results[5].correct_answer }),
+                        assign({ incorrAnswerOne6: (context, event) => event.data.results[5].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo6: (context, event) => event.data.results[5].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree6: (context, event) => event.data.results[5].incorrect_answers[2] }),
+
+                        assign({ question7: (context, event) => event.data.results[6].question }),
+                        assign({ corrAnswer7: (context, event) => event.data.results[6].correct_answer }),
+                        assign({ incorrAnswerOne7: (context, event) => event.data.results[6].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo7: (context, event) => event.data.results[6].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree7: (context, event) => event.data.results[6].incorrect_answers[2] }),
+
+                        assign({ question8: (context, event) => event.data.results[7].question }),
+                        assign({ corrAnswer8: (context, event) => event.data.results[7].correct_answer }),
+                        assign({ incorrAnswerOne8: (context, event) => event.data.results[7].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo8: (context, event) => event.data.results[7].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree8: (context, event) => event.data.results[7].incorrect_answers[2] }),
+
+                        assign({ question9: (context, event) => event.data.results[8].question }),
+                        assign({ corrAnswer9: (context, event) => event.data.results[8].correct_answer }),
+                        assign({ incorrAnswerOne9: (context, event) => event.data.results[8].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo9: (context, event) => event.data.results[8].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree9: (context, event) => event.data.results[8].incorrect_answers[2] }),
+
+                        assign({ question10: (context, event) => event.data.results[9].question }),
+                        assign({ corrAnswer10: (context, event) => event.data.results[9].correct_answer }),
+                        assign({ incorrAnswerOne10: (context, event) => event.data.results[9].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo10: (context, event) => event.data.results[9].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree10: (context, event) => event.data.results[9].incorrect_answers[2] }),
+
+                        assign({ question11: (context, event) => event.data.results[10].question }),
+                        assign({ corrAnswer11: (context, event) => event.data.results[10].correct_answer }),
+                        assign({ incorrAnswerOne11: (context, event) => event.data.results[10].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo11: (context, event) => event.data.results[10].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree11: (context, event) => event.data.results[10].incorrect_answers[2] }),
+
+                        assign({ question12: (context, event) => event.data.results[11].question }),
+                        assign({ corrAnswer12: (context, event) => event.data.results[11].correct_answer }),
+                        assign({ incorrAnswerOne12: (context, event) => event.data.results[11].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo12: (context, event) => event.data.results[11].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree12: (context, event) => event.data.results[11].incorrect_answers[2] }),
+
+                        assign({ question13: (context, event) => event.data.results[12].question }),
+                        assign({ corrAnswer13: (context, event) => event.data.results[12].correct_answer }),
+                        assign({ incorrAnswerOne13: (context, event) => event.data.results[12].incorrect_answers[0] }),
+                        assign({ incorrAnswerTwo13: (context, event) => event.data.results[12].incorrect_answers[1] }),
+                        assign({ incorrAnswerThree13: (context, event) => event.data.results[12].incorrect_answers[2] }),
+
+                        (context, event) => console.log(context, event),
+                        (context, event) => console.log(event.data.results[0])
+                    ]
+                },
+                onError: {
+                    target: 'init'
+                }
+            }
+        },
+
+        read: {
+            entry: send((context) => ({
+                type: 'SPEAK',
+                value: `Let me read out your next question. ${context.question1} The possible answers are: A. ${context.corrAnswer1}, B. ${context.incorrAnswerOne1}, C. ${context.incorrAnswerTwo1}, D. ${context.incorrAnswerThree1}. 
+                        The next one. ${context.question2} The possible answers are: A. ${context.corrAnswer2}, B. ${context.incorrAnswerOne2}, C. ${context.incorrAnswerTwo2}, D. ${context.incorrAnswerThree2}.`
+            })),
+            on: { ENDSPEECH: 'init' }
+        },
+
 
         question: {
             initial: 'choose',
