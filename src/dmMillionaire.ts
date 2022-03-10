@@ -536,7 +536,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     entry: [send((context) => ({
                                         type: 'SPEAK',
                                         value: `Okay, let me change your question to our backup question`
-                                    })), assign({ extraQuestionMoney: (context) => "$500" }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
+                                    })), assign({ extraQuestionMoney: (context) => "$500" }), assign({ switchCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
                                     on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
                                 },
                                 goBack: {
@@ -638,7 +638,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         prompt1: {
                             entry: send((context) => ({
                                 type: 'SPEAK', // corr answer A
-                                value: `Your first question is: ${context.question2} The possible answers are: 1. ${context.corrAnswer2}, 2. ${context.incorrAnswerOne2}, 3. ${context.incorrAnswerTwo2}, 4. ${context.incorrAnswerThree2}.`
+                                value: `Your second question is: ${context.question2} The possible answers are: 1. ${context.corrAnswer2}, 2. ${context.incorrAnswerOne2}, 3. ${context.incorrAnswerTwo2}, 4. ${context.incorrAnswerThree2}.`
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
@@ -925,7 +925,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     entry: [send((context) => ({
                                         type: 'SPEAK',
                                         value: `Okay, let me change your question to our backup question`
-                                    })), assign({ extraQuestionMoney: (context) => "$1000" }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
+                                    })), assign({ extraQuestionMoney: (context) => "$1000" }), assign({ switchCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
                                     on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
                                 },
                                 goBack: {
@@ -961,9 +961,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 extraQuestion: {
                     initial: 'choose',
                     on: {
-                        entry: {
-                            actions: assign({ switchCounter: (context) => 1 })
-                        },
                         RECOGNISED: [
                             {
                                 target: '#root.dm.getHelp',
@@ -1320,7 +1317,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 type: 'SPEAK',
                                 value: `Correct! ${context.corrAnswer13} was the right answer. You just earned ${context.extraQuestionMoney}!`
                             })),
-                            on: { ENDSPEECH: '#root.dm.init' } // NEED TO MAKE A STATE TO DECIDE WHERE TO GO NEXT
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' } // NEED TO MAKE A STATE TO DECIDE WHERE TO GO NEXT
                         },
                         youFailed: {
                             entry: send((context) => ({
