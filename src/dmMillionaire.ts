@@ -41,13 +41,30 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
             }
         },
 
+        getHelp: {
+            initial: 'explain',
+            states: {
+                explain: {
+                    entry: say(`The goal of the game is to answer 12 questions correctly. Answering each question increases your reward. You can choose to walk away with your winnings after answering a question correctly.
+                                Answering a question incorrectly means you will only receive money from safety steps: $1000 at question 2 and $50000 at question 7. To help you you have 2 lifelines. The lifelines include
+                                fifty-fifty, which will remove two of the incorrect answers and switch the question, which will change the question altogether.
+                                You can answer the questions by saying answer 1 or first answer, answer 2 or second answer, etc. It is important that you include the number so that it is easy for the system to understand.
+                                You can ask to use lifelines by saying the name of the lifeline. You can ask for the question to be repeated by saying repeat. Between the questions you can quit the game by saying quit. You can
+                                walk away with your winnings by saying walk away. You can inquire about the current question number by asking "how much money do I have?", and you can also ask "how many questions are left?".
+                                Make sure to speak clearly and in phrases that the game can understand.`),
+                    on: { ENDSPEECH: '#root.dm.playMillionaire.hist' },
+                }
+            }
+        },
+
         greet: {
             entry: send((context) => ({
                 type: 'SPEAK',
                 value: `Welcome.`
             })),
             on: {
-                entry: { actions: [assign({ partnerCounter: (context) => 0 }), assign({ dayCounter: (context) => 0 }), assign({ timeCounter: (context) => 0 })] },  // sets counters to 0
+                entry: {  
+                },
                 ENDSPEECH: 'fetchQuestions'
             }
         },
@@ -57,8 +74,16 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 id: 'getInfo',
                 src: (context, event) => kbRequest(context.celebrity), // can insert difficulty here with (context.difficulty) and ${text} in the function
                 onDone: {
-                    target: 'read',
+                    target: 'playMillionaire',
                     actions: [
+                        assign({ safePoint: (context) => '$0' }),
+                        assign({ currentMoney: (context) => '$0' }),
+                        assign({ remainingQuestions: (context) => 12 }),
+                        assign({ currentQuestion: (context) => 0 }),
+                        assign({ counter: (context) => 0 }),
+                        assign({ fiftyFiftyCounter: (context) => 0 }),
+                        assign({ switchCounter: (context) => 0 }),
+
                         assign({ question1: (context, event) => event.data.results[0].question }),
                         assign({ corrAnswer1: (context, event) => event.data.results[0].correct_answer }),
                         assign({ incorrAnswerOne1: (context, event) => event.data.results[0].incorrect_answers[0] }),
@@ -147,243 +172,1306 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
             }
         },
 
-        read: {
-            entry: send((context) => ({
-                type: 'SPEAK',
-                value: `Let me read out your next question. ${context.question1} The possible answers are: A. ${context.corrAnswer1}, B. ${context.incorrAnswerOne1}, C. ${context.incorrAnswerTwo1}, D. ${context.incorrAnswerThree1}. 
-                        The next one. ${context.question2} The possible answers are: A. ${context.corrAnswer2}, B. ${context.incorrAnswerOne2}, C. ${context.incorrAnswerTwo2}, D. ${context.incorrAnswerThree2}.`
-            })),
-            on: { ENDSPEECH: 'init' }
-        },
-
-
-        question: {
-            initial: 'choose',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: '.formToFill',
-                    },
-                ],
-                TIMEOUT: '.choose'
-            },
+        playMillionaire: {
+            initial: 'firstQuestion',
             states: {
-                choose: {
-                    always: [
-                        { target: 'prompt1', cond: (context) => context.partnerCounter !== 1 && context.dayCounter !== 1 && context.timeCounter !== 1 }, // need all info
-                        { target: 'prompt2', cond: (context) => context.partnerCounter === 1 && context.dayCounter !== 1 && context.timeCounter !== 1 }, // have info about person
-                        { target: 'prompt3', cond: (context) => context.partnerCounter !== 1 && context.dayCounter === 1 && context.timeCounter !== 1 }, // have info about day
-                        { target: 'prompt4', cond: (context) => context.partnerCounter !== 1 && context.dayCounter !== 1 && context.timeCounter === 1 }, // have info about time
-                        { target: 'prompt5', cond: (context) => context.partnerCounter === 1 && context.dayCounter === 1 && context.timeCounter !== 1 }, // have info about person and day
-                        { target: 'prompt6', cond: (context) => context.partnerCounter !== 1 && context.dayCounter === 1 && context.timeCounter === 1 }, // have info about day and time
-                        { target: 'prompt7', cond: (context) => context.partnerCounter === 1 && context.dayCounter !== 1 && context.timeCounter === 1 }, // have info about person and time
-                        { target: '#root.dm.confirmTime', cond: (context) => context.partnerCounter === 1 && context.dayCounter === 1 && context.timeCounter === 1 }, // have all info 
-                    ]
+                hist: {
+                    type: 'history'
                 },
-                prompt1: {
-                    entry: send((context) => ({
-                        type: 'SPEAK',
-                        value: `What meeting do you want me to schedule?`
-                    })),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                prompt2: {
-                    entry: send((context) => ({
-                        type: 'SPEAK',
-                        value: `When will that meeting take place?`
-                    })),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                prompt3: {
-                    entry: send((context) => ({
-                        type: 'SPEAK',
-                        value: `Who and at what time will you be meeting?`
-                    })),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                prompt4: {
-                    entry: send((context) => ({
-                        type: 'SPEAK',
-                        value: `Who and on what day will you be meeting?`
-                    })),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                prompt5: {
-                    entry: send((context) => ({
-                        type: 'SPEAK',
-                        value: `At what time will this meeting take place?`
-                    })),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                prompt6: {
-                    entry: send((context) => ({
-                        type: 'SPEAK',
-                        value: `Who will this meeting be with?`
-                    })),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                prompt7: {
-                    entry: send((context) => ({
-                        type: 'SPEAK',
-                        value: `On what day will this meeting take place?`
-                    })),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I didn't get it."),
-                    on: { ENDSPEECH: 'choose' }
-                },
-                formToFill: {
-                    type: 'parallel',
+
+                firstQuestion: {
+                    initial: 'choose',
+                    on: {
+                        entry: {
+                            actions: [assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })]
+                        },
+                        RECOGNISED: [
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => context.recResult[0].utterance.indexOf("help") !== -1 || context.recResult[0].utterance.indexOf("Help") !== -1
+                            },
+                            {
+                                target: '#root.dm.init',
+                                cond: (context) => context.recResult[0].utterance.indexOf("quit") !== -1 || context.recResult[0].utterance.indexOf("Quit") !== -1
+                            },
+                            {
+                                target: '.choose',
+                                cond: (context) => context.recResult[0].utterance.indexOf("repeat") !== -1 || context.recResult[0].utterance.indexOf("Repeat") !== -1
+                            },
+                            {
+                                target: '.fiftyFifty',
+                                cond: (context) => context.recResult[0].utterance.indexOf("fifty") !== -1 || context.recResult[0].utterance.indexOf("Fifty") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("50") !== -1 || context.recResult[0].utterance.indexOf("5050") !== -1,
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: '.switchQuestion',
+                                cond: (context) => context.recResult[0].utterance.indexOf("switch") !== -1 || context.recResult[0].utterance.indexOf("Switch") !== -1,
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: '.checkTrue',
+                                cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
+                                actions: assign({ uncertainAnswer: (context) => "1" })
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
+                                actions:  assign({ uncertainAnswer: (context) => "2" })
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("third") !== -1 || context.recResult[0].utterance.indexOf("three") !== -1 || context.recResult[0].utterance.indexOf("3rd") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("3") !== -1 || context.recResult[0].utterance.indexOf("Three") !== -1 || context.recResult[0].utterance.indexOf("Third") !== -1,
+                                actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "3" })]
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("fourth") !== -1 || context.recResult[0].utterance.indexOf("four") !== -1 || context.recResult[0].utterance.indexOf("4th") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("4") !== -1 || context.recResult[0].utterance.indexOf("Four") !== -1 || context.recResult[0].utterance.indexOf("Fourth") !== -1,
+                                actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "4" })]
+                            },                 
+                            {
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 })
+                            },
+                        ],
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
+                    },
                     states: {
-                        partner: {
-                            initial: 'verify',
-                            states: {
-                                verify: {
-                                    always: [
-                                        // Analogously to the 'time' and 'day' states below, here we check if a given string is a part of the utterance and if so we assign the respective counter a value of 1, and the variable
-                                        // the value that we associate with that string, and then move to 'final'. If there is no match we simply move to 'final'.
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Bob") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Bob" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Bill") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Bill" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Janet") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Janet" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Jason") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Jason" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Helen") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Helen" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Jim") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Jim" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("John") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "John" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Lucy") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Lucy" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Margaret") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Margaret" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Maria") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Maria" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Mike") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Mike" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Peter") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Peter" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Tobias") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Tobias" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Kate") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Kate" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Jacob") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Jacob" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Tom") !== -1, actions: [assign({ partnerCounter: (context) => 1 }), assign({ partner: (context) => "Tom" })], target: 'done' },
-                                        {
-                                            cond: (context) => context.recResult[0].utterance.indexOf("Bob" || "Bill" || "Janet" || "Jason" || "Helen" || "Jim" || "John" || "Lucy" || "Margaret" || "Maria" || "Mike" ||
-                                                "Peter" || "Tobias" || "Kate" || "Jacob" || "Tom") === -1, target: 'done'
-                                        },
-                                    ]
-                                },
-                                done: {
-                                    type: 'final',
-                                }
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: 'youFailed', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `Your first question is: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
                             }
                         },
-
-                        day: {
-                            initial: 'verify',
-                            states: {
-                                verify: {
-                                    always: [
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Monday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Monday" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Tuesday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Tuesday" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Wednesday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Wednesday" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Thursday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Thursday" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Friday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Friday" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Saturday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Saturday" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("Sunday") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "Sunday" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("today" || "Today") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "today" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("tomorrow" || "Tomorrow") !== -1, actions: [assign({ dayCounter: (context) => 1 }), assign({ day: (context) => "tomorrow" })], target: 'done' },
-                                        {
-                                            cond: (context) => context.recResult[0].utterance.indexOf("Monday" || "Tuesday" || "Wednesday" || "Thursday" || "Friday" || "Saturday" || "Sunday" || "today" || "Today" ||
-                                                "tomorrow" || "Tomorrow") === -1, target: 'done'
-                                        },
-                                    ]
-                                },
-                                done: {
-                                    type: 'final',
-                                }
+                        prompt2: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
                             }
                         },
-
-                        time: {
-                            initial: 'verify',
-                            states: {
-                                verify: {
-                                    always: [
-                                        // As visible above, we can put multiple strings as options for a match here but have a single value associated with them - this is also used in the "nomatch" condition.
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("noon" || "Noon") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "noon" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("midday" || "Midday") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "midday" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("10" || "10:00" || "ten" || "Ten") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "10:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("11" || "11:00" || "eleven" || "Eleven") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "11:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("12" || "12:00" || "twelve" || "Twelve") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "12:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("1" || "1:00" || "one" || "One") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "1:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("2" || "2:00" || "two" || "Two") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "2:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("3" || "3:00" || "three" || "Three") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "3:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("4" || "4:00" || "four" || "Four") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "4:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("5" || "5:00" || "five" || "Five") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "5:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("6" || "6:00" || "six" || "Six") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "6:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("7" || "7:00" || "seven" || "Seven") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "7:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("8" || "8:00" || "eight" || "Eight") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "8:00" })], target: 'done' },
-                                        { cond: (context) => context.recResult[0].utterance.indexOf("9" || "9:00" || "nine" || "Nine") !== -1, actions: [assign({ timeCounter: (context) => 1 }), assign({ time: (context) => "9:00" })], target: 'done' },
-                                        {
-                                            cond: (context) => context.recResult[0].utterance.indexOf("noon" || "Noon" || "midday" || "Midday" || "10" || "10:00" || "ten" || "Ten" || "11" || "11:00" || "eleven" || "Eleven" || "1" || "1:00" || "one" ||
-                                                "One" || "2" || "2:00" || "two" || "Two" || "3" || "3:00" || "three" || "Three" || "4" || "4:00" || "four" || "Four" || "5" || "5:00" || "five" || "Five" || "6" || "6:00" || "six" || "Six" || "7" ||
-                                                "7:00" || "seven" || "Seven" || "8" || "8:00" || "eight" || "Eight" || "9" || "9:00" || "nine" || "Nine") === -1, target: 'done'
-                                        },
-                                    ]
-                                },
-                                done: {
-                                    type: 'final',
-                                }
+                        prompt3: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `This is your last chance to answer this question: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
                             }
                         },
-                    },
-                    onDone: { target: "#root.dm.question" }  // when the partner, day, time states have either recognized something or not done so and moved to the final state
-                },
-            }
-        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I did not get that."),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' }
+                        },
+                        // check if sure
+                        checkTrue: {
+                            initial: 'makeSure',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: 'goodJob',
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' })], // add safe step whenever necessary
+                                    },
+                                    {
+                                        target: '#root.dm.playMillionaire.firstQuestion',
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: assign({ counter: (context) => context.counter + 1 }),
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                    }
+                                ],
+                                TIMEOUT: { target: '.makeSure' }
+                            },
+                            states: {
+                                makeSure: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Is ${context.uncertainAnswer} your final answer?`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'makeSure' }
+                                },
 
+                            },
+                        },
+                        checkFalse: {
+                            initial: 'makeSure',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: 'youFailed',
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: assign({ counter: (context) => 0 }), // add safe step whenever necessary
+                                    },
+                                    {
+                                        target: '#root.dm.playMillionaire.firstQuestion',
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: assign({ counter: (context) => context.counter + 1 }),
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                    }
+                                ],
+                                TIMEOUT: { target: '.makeSure' }
+                            },
+                            states: {
+                                makeSure: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Is ${context.uncertainAnswer} your final answer?`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'makeSure' }
+                                },
 
+                            },
+                        },
+                        // lifelines
+                        // 50/50
+                        fiftyFifty: {
+                            initial: 'select',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: '.checkTrue',
+                                        cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
+                                            context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
+                                        actions: assign({ uncertainAnswer: (context) => "1" })
+                                    },
+                                    {
+                                        target: '.checkFalse',
+                                        cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
+                                            context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
+                                        actions: assign({ uncertainAnswer: (context) => "2" })
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                        actions: assign({ counter: (context) => context.counter + 1 })
+                                    }
+                                ],
+                                TIMEOUT: { target: '.select', actions: assign({ counter: (context) => context.counter + 1 }) }
+                            },
+                            states: {
+                                select: {
+                                    always: [
+                                        { target: 'goBack', cond: (context) => context.fiftyFiftyCounter !== 0 },
+                                        { target: 'reducedQuestion1', cond: (context) => context.counter === 0 && context.fiftyFiftyCounter === 0 },
+                                        { target: 'reducedQuestion2', cond: (context) => context.counter === 1 && context.fiftyFiftyCounter === 0 },
+                                        { target: 'reducedQuestion3', cond: (context) => context.counter === 2 && context.fiftyFiftyCounter === 0 },
+                                        { target: '#root.dm.playMillionaire.firstQuestion.youFailed', cond: (context) => context.counter === 3 },
+                                    ]
+                                },
+                                goBack: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `I am sorry, but you have already used up your fifty-fifty lifeline.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: '#root.dm.playMillionaire.firstQuestion'
+                                    }
+                                },
+                                reducedQuestion1: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Okay, let me take away two of the incorrect answers and re-read the question for you together with the remaining two options. ${context.question1}
+                                                The remaining answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                reducedQuestion2: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `${context.question1} The remaining answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                reducedQuestion3: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `For the final time: ${context.question1}. The answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'select' }
+                                },
+                                checkTrue: {
+                                    initial: 'makeSure',
+                                    on: {
+                                        RECOGNISED: [
+                                            {
+                                                target: '#root.dm.playMillionaire.firstQuestion.goodJob',
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ fiftyFiftyCounter: (context) => 1 })], // add safe step whenever necessary
+                                            },
+                                            {
+                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty',
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => context.counter + 1 }),
+                                            },
+                                            {
+                                                target: '.nomatch',
+                                            }
+                                        ],
+                                        TIMEOUT: { target: '.makeSure' }
+                                    },
+                                    states: {
+                                        makeSure: {
+                                            entry: send((context) => ({
+                                                type: 'SPEAK',
+                                                value: `Is ${context.uncertainAnswer} your final answer?`
+                                            })),
+                                            on: {
+                                                ENDSPEECH: 'ask'
+                                            }
+                                        },
+                                        ask: {
+                                            entry: send('LISTEN'),
+                                        },
+                                        nomatch: {
+                                            entry: say("Sorry, I did not get that."),
+                                            on: { ENDSPEECH: 'makeSure' }
+                                        },
 
-        confirmTime: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'success',
-                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: 'question',
-                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                        actions: [assign({ partnerCounter: (context) => 0 }), assign({ dayCounter: (context) => 0 }), assign({ timeCounter: (context) => 0 })]   // needed to start a new inquiry
-                    },
-                    {
-                        target: '.nomatch'
+                                    },
+                                },
+                                checkFalse: {
+                                    initial: 'makeSure',
+                                    on: {
+                                        RECOGNISED: [
+                                            {
+                                                target: '#root.dm.playMillionaire.firstQuestion.youFailed',
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => 0 }), // add safe step whenever necessary
+                                            },
+                                            {
+                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty',
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => context.counter + 1 }),
+                                            },
+                                            {
+                                                target: '.nomatch',
+                                            }
+                                        ],
+                                        TIMEOUT: { target: '.makeSure' }
+                                    },
+                                    states: {
+                                        makeSure: {
+                                            entry: send((context) => ({
+                                                type: 'SPEAK',
+                                                value: `Is ${context.uncertainAnswer} your final answer?`
+                                            })),
+                                            on: {
+                                                ENDSPEECH: 'ask'
+                                            }
+                                        },
+                                        ask: {
+                                            entry: send('LISTEN'),
+                                        },
+                                        nomatch: {
+                                            entry: say("Sorry, I did not get that."),
+                                            on: { ENDSPEECH: 'makeSure' }
+                                        },
+
+                                    },
+                                },
+                            },
+                        },
+                        // switchQuestion
+                        switchQuestion: {
+                            initial: 'choose',
+                            states: {
+                                choose: {
+                                    always: [
+                                        { target: 'goBack', cond: (context) => context.switchCounter !== 0 },
+                                        { target: 'changeQuestion', cond: (context) => context.switchCounter === 0 },
+                                    ]
+                                },
+                                changeQuestion: {
+                                    entry: [send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Okay, let me change your question to our backup question`
+                                    })), assign({ extraQuestionMoney: (context) => "$500" }),],
+                                    on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
+                                },
+                                goBack: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `I am sorry, but you have already used up your switch question lifeline.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: '#root.dm.playMillionaire.firstQuestion'
+                                    }
+                                },
+                            }
+                        },
+                        // final states
+                        goodJob: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', 
+                                value: `Correct! ${context.corrAnswer1} was the right answer. You just earned $500!`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
+                        },
+                        youFailed: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', 
+                                value: `I'm sorry, but the correct answer was ${context.corrAnswer1}. You will have to go home with ${context.safePoint}`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.init' }
+                        },
                     }
-                ],
-                TIMEOUT: '.prompt'
-            },
+                },
 
-            states: {
-                prompt: {
+                secondQuestion: {
+                    initial: 'choose',
+                    on: {
+                        entry: {
+                            actions: [assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })]
+                        },
+                        RECOGNISED: [
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => context.recResult[0].utterance.indexOf("help") !== -1 || context.recResult[0].utterance.indexOf("Help") !== -1
+                            },
+                            {
+                                target: '#root.dm.init',
+                                cond: (context) => context.recResult[0].utterance.indexOf("quit") !== -1 || context.recResult[0].utterance.indexOf("Quit") !== -1
+                            },
+                            {
+                                target: '.choose',
+                                cond: (context) => context.recResult[0].utterance.indexOf("repeat") !== -1 || context.recResult[0].utterance.indexOf("Repeat") !== -1
+                            },
+                            {
+                                target: '.fiftyFifty',
+                                cond: (context) => context.recResult[0].utterance.indexOf("fifty") !== -1 || context.recResult[0].utterance.indexOf("Fifty") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("50") !== -1 || context.recResult[0].utterance.indexOf("5050") !== -1,
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: '.switchQuestion',
+                                cond: (context) => context.recResult[0].utterance.indexOf("switch") !== -1 || context.recResult[0].utterance.indexOf("Switch") !== -1,
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: '.checkTrue',
+                                cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
+                                actions: assign({ uncertainAnswer: (context) => "1" })
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
+                                actions: assign({ uncertainAnswer: (context) => "2" })
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("third") !== -1 || context.recResult[0].utterance.indexOf("three") !== -1 || context.recResult[0].utterance.indexOf("3rd") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("3") !== -1 || context.recResult[0].utterance.indexOf("Three") !== -1 || context.recResult[0].utterance.indexOf("Third") !== -1,
+                                actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "3" })]
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("fourth") !== -1 || context.recResult[0].utterance.indexOf("four") !== -1 || context.recResult[0].utterance.indexOf("4th") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("4") !== -1 || context.recResult[0].utterance.indexOf("Four") !== -1 || context.recResult[0].utterance.indexOf("Fourth") !== -1,
+                                actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "4" })]
+                            },
+                            {
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 })
+                            },
+                        ],
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
+                    },
+                    states: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: 'youFailed', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `Your first question is: ${context.question2} The possible answers are: 1. ${context.corrAnswer2}, 2. ${context.incorrAnswerOne2}, 3. ${context.incorrAnswerTwo2}, 4. ${context.incorrAnswerThree2}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        prompt2: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `${context.question1} The possible answers are: 1. ${context.corrAnswer2}, 2. ${context.incorrAnswerOne2}, 3. ${context.incorrAnswerTwo2}, 4. ${context.incorrAnswerThree2}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        prompt3: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `This is your last chance to answer this question: ${context.question2} The possible answers are: 1. ${context.corrAnswer2}, 2. ${context.incorrAnswerOne2}, 3. ${context.incorrAnswerTwo2}, 4. ${context.incorrAnswerThree2}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I did not get that."),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.secondQuestion' }
+                        },
+                        // check if sure
+                        checkTrue: {
+                            initial: 'makeSure',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: 'goodJob',
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$1000' })], // add safe step whenever necessary
+                                    },
+                                    {
+                                        target: '#root.dm.playMillionaire.secondQuestion',
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: assign({ counter: (context) => context.counter + 1 }),
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                    }
+                                ],
+                                TIMEOUT: { target: '.makeSure' }
+                            },
+                            states: {
+                                makeSure: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Is ${context.uncertainAnswer} your final answer?`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'makeSure' }
+                                },
+
+                            },
+                        },
+                        checkFalse: {
+                            initial: 'makeSure',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: 'youFailed',
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: [assign({ counter: (context) => 0 }), assign({ safePoint: (context) => '$1000' }),] // add safe step whenever necessary
+                                    },
+                                    {
+                                        target: '#root.dm.playMillionaire.secondQuestion',
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: assign({ counter: (context) => context.counter + 1 }),
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                    }
+                                ],
+                                TIMEOUT: { target: '.makeSure' }
+                            },
+                            states: {
+                                makeSure: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Is ${context.uncertainAnswer} your final answer?`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'makeSure' }
+                                },
+
+                            },
+                        },
+                        // lifelines
+                        // 50/50
+                        fiftyFifty: {
+                            initial: 'select',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: '.checkTrue',
+                                        cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
+                                            context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
+                                        actions: assign({ uncertainAnswer: (context) => "1" })
+                                    },
+                                    {
+                                        target: '.checkFalse',
+                                        cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
+                                            context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
+                                        actions: assign({ uncertainAnswer: (context) => "2" })
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                        actions: assign({ counter: (context) => context.counter + 1 })
+                                    }
+                                ],
+                                TIMEOUT: { target: '.select', actions: assign({ counter: (context) => context.counter + 1 }) }
+                            },
+                            states: {
+                                select: {
+                                    always: [
+                                        { target: 'goBack', cond: (context) => context.fiftyFiftyCounter !== 0 },
+                                        { target: 'reducedQuestion1', cond: (context) => context.counter === 0 && context.fiftyFiftyCounter === 0 },
+                                        { target: 'reducedQuestion2', cond: (context) => context.counter === 1 && context.fiftyFiftyCounter === 0 },
+                                        { target: 'reducedQuestion3', cond: (context) => context.counter === 2 && context.fiftyFiftyCounter === 0 },
+                                        { target: '#root.dm.playMillionaire.secondQuestion.youFailed', cond: (context) => context.counter === 3 },
+                                    ]
+                                },
+                                goBack: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `I am sorry, but you have already used up your fifty-fifty lifeline.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: '#root.dm.playMillionaire.secondQuestion'
+                                    }
+                                },
+                                reducedQuestion1: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Okay, let me take away two of the incorrect answers and re-read the question for you together with the remaining two options. ${context.question2}
+                                                The remaining answers are: 1. ${context.corrAnswer2}, 2. ${context.incorrAnswerOne2}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                reducedQuestion2: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `${context.question2} The remaining answers are: 1. ${context.corrAnswer2}, 2. ${context.incorrAnswerOne2}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                reducedQuestion3: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `For the final time: ${context.question2}. The answers are: 1. ${context.corrAnswer2}, 2. ${context.incorrAnswerOne2}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'select' }
+                                },
+                                checkTrue: {
+                                    initial: 'makeSure',
+                                    on: {
+                                        RECOGNISED: [
+                                            {
+                                                target: '#root.dm.playMillionaire.secondQuestion.goodJob',
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$1000' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ safePoint: (context) => '$1000' })], // add safe step whenever necessary
+                                            },
+                                            {
+                                                target: '#root.dm.playMillionaire.secondQuestion.fiftyFifty',
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => context.counter + 1 }),
+                                            },
+                                            {
+                                                target: '.nomatch',
+                                            }
+                                        ],
+                                        TIMEOUT: { target: '.makeSure' }
+                                    },
+                                    states: {
+                                        makeSure: {
+                                            entry: send((context) => ({
+                                                type: 'SPEAK',
+                                                value: `Is ${context.uncertainAnswer} your final answer?`
+                                            })),
+                                            on: {
+                                                ENDSPEECH: 'ask'
+                                            }
+                                        },
+                                        ask: {
+                                            entry: send('LISTEN'),
+                                        },
+                                        nomatch: {
+                                            entry: say("Sorry, I did not get that."),
+                                            on: { ENDSPEECH: 'makeSure' }
+                                        },
+
+                                    },
+                                },
+                                checkFalse: {
+                                    initial: 'makeSure',
+                                    on: {
+                                        RECOGNISED: [
+                                            {
+                                                target: '#root.dm.playMillionaire.secondQuestion.youFailed',
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => 0 }),
+                                            },
+                                            {
+                                                target: '#root.dm.playMillionaire.secondQuestion.fiftyFifty',
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => context.counter + 1 }),
+                                            },
+                                            {
+                                                target: '.nomatch',
+                                            }
+                                        ],
+                                        TIMEOUT: { target: '.makeSure' }
+                                    },
+                                    states: {
+                                        makeSure: {
+                                            entry: send((context) => ({
+                                                type: 'SPEAK',
+                                                value: `Is ${context.uncertainAnswer} your final answer?`
+                                            })),
+                                            on: {
+                                                ENDSPEECH: 'ask'
+                                            }
+                                        },
+                                        ask: {
+                                            entry: send('LISTEN'),
+                                        },
+                                        nomatch: {
+                                            entry: say("Sorry, I did not get that."),
+                                            on: { ENDSPEECH: 'makeSure' }
+                                        },
+
+                                    },
+                                },
+                            },
+                        },
+                        // switchQuestion
+                        switchQuestion: {
+                            initial: 'choose',
+                            states: {
+                                choose: {
+                                    always: [
+                                        { target: 'goBack', cond: (context) => context.switchCounter !== 0 },
+                                        { target: 'changeQuestion', cond: (context) => context.switchCounter === 0 },
+                                    ]
+                                },
+                                changeQuestion: {
+                                    entry: [send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Okay, let me change your question to our backup question`
+                                    })), assign({ extraQuestionMoney: (context) => "$1000" }),],
+                                    on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
+                                },
+                                goBack: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `I am sorry, but you have already used up your switch question lifeline.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: '#root.dm.playMillionaire.secondQuestion'
+                                    }
+                                },
+                            }
+                        },
+                        // final states
+                        goodJob: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Correct! ${context.corrAnswer2} was the right answer. You just earned $500!`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
+                        },
+                        youFailed: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `I'm sorry, but the correct answer was ${context.corrAnswer2}. You will have to go home with ${context.safePoint}`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.init' }
+                        },
+                    }
+                },
+
+                // extra question for change question lifeline
+                extraQuestion: {
+                    initial: 'choose',
+                    on: {
+                        entry: {
+                            actions: assign({ switchCounter: (context) => 1 })
+                        },
+                        RECOGNISED: [
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => context.recResult[0].utterance.indexOf("help") !== -1 || context.recResult[0].utterance.indexOf("Help") !== -1
+                            },
+                            {
+                                target: '#root.dm.init',
+                                cond: (context) => context.recResult[0].utterance.indexOf("quit") !== -1 || context.recResult[0].utterance.indexOf("Quit") !== -1
+                            },
+                            {
+                                target: '.choose',
+                                cond: (context) => context.recResult[0].utterance.indexOf("repeat") !== -1 || context.recResult[0].utterance.indexOf("Repeat") !== -1
+                            },
+                            {
+                                target: '.fiftyFifty',
+                                cond: (context) => context.recResult[0].utterance.indexOf("fifty") !== -1 || context.recResult[0].utterance.indexOf("Fifty") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("50") !== -1 || context.recResult[0].utterance.indexOf("5050") !== -1,
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: '.switchQuestion',
+                                cond: (context) => context.recResult[0].utterance.indexOf("switch") !== -1 || context.recResult[0].utterance.indexOf("Switch") !== -1,
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: '.checkTrue',
+                                cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
+                                actions: assign({ uncertainAnswer: (context) => "1" })
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
+                                actions: assign({ uncertainAnswer: (context) => "2" })
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("third") !== -1 || context.recResult[0].utterance.indexOf("three") !== -1 || context.recResult[0].utterance.indexOf("3rd") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("3") !== -1 || context.recResult[0].utterance.indexOf("Three") !== -1 || context.recResult[0].utterance.indexOf("Third") !== -1,
+                                actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "3" })]
+                            },
+                            {
+                                target: '.checkFalse',
+                                cond: (context) => context.recResult[0].utterance.indexOf("fourth") !== -1 || context.recResult[0].utterance.indexOf("four") !== -1 || context.recResult[0].utterance.indexOf("4th") !== -1 ||
+                                    context.recResult[0].utterance.indexOf("4") !== -1 || context.recResult[0].utterance.indexOf("Four") !== -1 || context.recResult[0].utterance.indexOf("Fourth") !== -1,
+                                actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "4" })]
+                            },
+                            {
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 })
+                            },
+                        ],
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
+                    },
+                    states: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: 'youFailed', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `The extra question is: ${context.question13} The possible answers are: 1. ${context.corrAnswer13}, 2. ${context.incorrAnswerOne13}, 3. ${context.incorrAnswerTwo13}, 4. ${context.incorrAnswerThree13}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        prompt2: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `${context.question13} The possible answers are: 1. ${context.corrAnswer13}, 2. ${context.incorrAnswerOne13}, 3. ${context.incorrAnswerTwo13}, 4. ${context.incorrAnswerThree13}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        prompt3: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', // corr answer A
+                                value: `This is your last chance to answer this question: ${context.question13} The possible answers are: 1. ${context.corrAnswer13}, 2. ${context.incorrAnswerOne13}, 3. ${context.incorrAnswerTwo13}, 4. ${context.incorrAnswerThree13}.`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I did not get that."),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
+                        },
+                        // check if sure
+                        checkTrue: {
+                            initial: 'makeSure',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: 'goodJob',
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => context.extraQuestionMoney })], // add safe step whenever necessary
+                                    },
+                                    {
+                                        target: '#root.dm.playMillionaire.extraQuestion',
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: assign({ counter: (context) => context.counter + 1 }),
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                    }
+                                ],
+                                TIMEOUT: { target: '.makeSure' }
+                            },
+                            states: {
+                                makeSure: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Is ${context.uncertainAnswer} your final answer?`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'makeSure' }
+                                },
+
+                            },
+                        },
+                        checkFalse: {
+                            initial: 'makeSure',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: 'youFailed',
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: assign({ counter: (context) => 0 }), // add safe step whenever necessary
+                                    },
+                                    {
+                                        target: '#root.dm.playMillionaire.extraQuestion',
+                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                        actions: assign({ counter: (context) => context.counter + 1 }),
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                    }
+                                ],
+                                TIMEOUT: { target: '.makeSure' }
+                            },
+                            states: {
+                                makeSure: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Is ${context.uncertainAnswer} your final answer?`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'makeSure' }
+                                },
+
+                            },
+                        },
+                        // lifelines
+                        // 50/50
+                        fiftyFifty: {
+                            initial: 'select',
+                            on: {
+                                RECOGNISED: [
+                                    {
+                                        target: '.checkTrue',
+                                        cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
+                                            context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
+                                        actions: assign({ uncertainAnswer: (context) => "1" })
+                                    },
+                                    {
+                                        target: '.checkFalse',
+                                        cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
+                                            context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
+                                        actions: assign({ uncertainAnswer: (context) => "2" })
+                                    },
+                                    {
+                                        target: '.nomatch',
+                                        actions: assign({ counter: (context) => context.counter + 1 })
+                                    }
+                                ],
+                                TIMEOUT: { target: '.select', actions: assign({ counter: (context) => context.counter + 1 }) }
+                            },
+                            states: {
+                                select: {
+                                    always: [
+                                        { target: 'goBack', cond: (context) => context.fiftyFiftyCounter !== 0 },
+                                        { target: 'reducedQuestion1', cond: (context) => context.counter === 0 && context.fiftyFiftyCounter === 0 },
+                                        { target: 'reducedQuestion2', cond: (context) => context.counter === 1 && context.fiftyFiftyCounter === 0 },
+                                        { target: 'reducedQuestion3', cond: (context) => context.counter === 2 && context.fiftyFiftyCounter === 0 },
+                                        { target: '#root.dm.playMillionaire.extraQuestion.youFailed', cond: (context) => context.counter === 3 },
+                                    ]
+                                },
+                                goBack: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `I am sorry, but you have already used up your fifty-fifty lifeline.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: '#root.dm.playMillionaire.extraQuestion'
+                                    }
+                                },
+                                reducedQuestion1: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `Okay, let me take away two of the incorrect answers and re-read the question for you together with the remaining two options. ${context.question13}
+                                                The remaining answers are: 1. ${context.corrAnswer13}, 2. ${context.incorrAnswerOne13}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                reducedQuestion2: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `${context.question13} The remaining answers are: 1. ${context.corrAnswer13}, 2. ${context.incorrAnswerOne13}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                reducedQuestion3: {
+                                    entry: send((context) => ({
+                                        type: 'SPEAK',
+                                        value: `For the final time: ${context.question13}. The answers are: 1. ${context.corrAnswer13}, 2. ${context.incorrAnswerOne13}.`
+                                    })),
+                                    on: {
+                                        ENDSPEECH: 'ask'
+                                    }
+                                },
+                                ask: {
+                                    entry: send('LISTEN'),
+                                },
+                                nomatch: {
+                                    entry: say("Sorry, I did not get that."),
+                                    on: { ENDSPEECH: 'select' }
+                                },
+                                checkTrue: {
+                                    initial: 'makeSure',
+                                    on: {
+                                        RECOGNISED: [
+                                            {
+                                                target: '#root.dm.playMillionaire.extraQuestion.goodJob',
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => context.extraQuestionMoney }), assign({ fiftyFiftyCounter: (context) => 1 })], // add safe step whenever necessary
+                                            },
+                                            {
+                                                target: '#root.dm.playMillionaire.extraQuestion.fiftyFifty',
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => context.counter + 1 }),
+                                            },
+                                            {
+                                                target: '.nomatch',
+                                            }
+                                        ],
+                                        TIMEOUT: { target: '.makeSure' }
+                                    },
+                                    states: {
+                                        makeSure: {
+                                            entry: send((context) => ({
+                                                type: 'SPEAK',
+                                                value: `Is ${context.uncertainAnswer} your final answer?`
+                                            })),
+                                            on: {
+                                                ENDSPEECH: 'ask'
+                                            }
+                                        },
+                                        ask: {
+                                            entry: send('LISTEN'),
+                                        },
+                                        nomatch: {
+                                            entry: say("Sorry, I did not get that."),
+                                            on: { ENDSPEECH: 'makeSure' }
+                                        },
+
+                                    },
+                                },
+                                checkFalse: {
+                                    initial: 'makeSure',
+                                    on: {
+                                        RECOGNISED: [
+                                            {
+                                                target: '#root.dm.playMillionaire.extraQuestion.youFailed',
+                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => 0 }), // add safe step whenever necessary
+                                            },
+                                            {
+                                                target: '#root.dm.playMillionaire.extraQuestion.fiftyFifty',
+                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                                actions: assign({ counter: (context) => context.counter + 1 }),
+                                            },
+                                            {
+                                                target: '.nomatch',
+                                            }
+                                        ],
+                                        TIMEOUT: { target: '.makeSure' }
+                                    },
+                                    states: {
+                                        makeSure: {
+                                            entry: send((context) => ({
+                                                type: 'SPEAK',
+                                                value: `Is ${context.uncertainAnswer} your final answer?`
+                                            })),
+                                            on: {
+                                                ENDSPEECH: 'ask'
+                                            }
+                                        },
+                                        ask: {
+                                            entry: send('LISTEN'),
+                                        },
+                                        nomatch: {
+                                            entry: say("Sorry, I did not get that."),
+                                            on: { ENDSPEECH: 'makeSure' }
+                                        },
+
+                                    },
+                                },
+                            },
+                        },
+                        // switchQuestion
+                        switchQuestion: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `This question was already switched!.`
+                            })),
+                            on: {
+                                ENDSPEECH: '#root.dm.playMillionaire.extraQuestion'
+                            }
+                        },
+                        // final states
+                        goodJob: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Correct! ${context.corrAnswer13} was the right answer. You just earned ${context.extraQuestionMoney}!`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.init' } // NEED TO MAKE A STATE TO DECIDE WHERE TO GO NEXT
+                        },
+                        youFailed: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `I'm sorry, but the correct answer was ${context.corrAnswer13}. You will have to go home with ${context.safePoint}`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.init' }
+                        },
+                    }
+                },
+
+                chitChat: {
+                    initial: 'choose',
+                    on: {
+                        RECOGNISED: [
+                            {
+                                target: '#root.dm.getHelp',
+                                cond: (context) => context.recResult[0].utterance.indexOf("help") !== -1 || context.recResult[0].utterance.indexOf("Help") !== -1
+                            },
+                            {
+                                target: '#root.dm.init',
+                                cond: (context) => context.recResult[0].utterance.indexOf("quit") !== -1 || context.recResult[0].utterance.indexOf("Quit") !== -1
+                            },
+                            {
+                                target: '.choose',
+                                cond: (context) => context.recResult[0].utterance.indexOf("repeat") !== -1 || context.recResult[0].utterance.indexOf("Repeat") !== -1
+                            },
+                            {
+                                target: '.leave',
+                                cond: (context) => context.recResult[0].utterance.indexOf("leave") !== -1 || context.recResult[0].utterance.indexOf("Leave") !== -1
+                            },
+                            {
+                                target: '.checkMoney',
+                                cond: (context) => context.recResult[0].utterance.indexOf("money") !== -1 || context.recResult[0].utterance.indexOf("Money") !== -1
+                            },
+                            {
+                                target: '.checkQuestions',
+                                cond: (context) => context.recResult[0].utterance.indexOf("questions") !== -1 || context.recResult[0].utterance.indexOf("Questions") !== -1
+                            },
+                            {
+                                target: '.selectNext',
+                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => 0 })
+                            },
+                            {
+                                target: '.negation',
+                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
+                                actions: assign({ counter: (context) => context.counter + 1 }),
+                            },
+                            {
+                                target: '.nomatch',
+                                actions: assign({ counter: (context) => context.counter + 1 })
+                            },
+                        ],
+                        TIMEOUT: { actions: assign({ counter: (context) => context.counter + 1 }), target: '.choose' }
+                    },
+                    states: {
+                        choose: {
+                            always: [
+                                { target: 'prompt1', cond: (context) => context.counter === 0 },
+                                { target: 'prompt2', cond: (context) => context.counter === 1 },
+                                { target: 'prompt3', cond: (context) => context.counter === 2 },
+                                { target: '#root.dm.init', cond: (context) => context.counter === 3 },
+                            ]
+                        },
+                        prompt1: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Okay, that was question ${context.currentQuestion}. Are you ready to continue?`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        prompt2: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', 
+                                value: `Are you ready to move on to the next question?`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        prompt3: {
+                            entry: send((context) => ({
+                                type: 'SPEAK', 
+                                value: `Shall we move on to the next question?`
+                            })),
+                            on: {
+                                ENDSPEECH: 'ask'
+                            }
+                        },
+                        ask: {
+                            entry: send('LISTEN'),
+                        },
+                        nomatch: {
+                            entry: say("Sorry, I did not get that."),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
+                        },
+                        leave: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Okay! Thank you for playing, and you will now leave with ${context.currentMoney}`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.init' }
+                        },
+                        checkMoney: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Let me have a look: your current potential winnings are ${context.currentMoney}, and your safety spot lies at ${context.safePoint}`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
+                        },
+                        checkQuestions: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `Let me have a look. You just answered ${context.currentQuestion}, so you still have ${context.remainingQuestions} left to answer!`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
+                        },
+                        negation: {
+                            entry: send((context) => ({
+                                type: 'SPEAK',
+                                value: `I am sorry, but you must proceed or decide to leave now!`
+                            })),
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
+                        },
+                        selectNext: {
+                            always: [
+                                { target: '#root.dm.playMillionaire.secondQuestion', cond: (context) => context.currentQuestion === 1 },
+                                { target: '#root.dm.playMillionaire.congrats', cond: (context) => context.currentQuestion === 2 },
+                                                                
+                            ]
+                        }
+                    }
+                },
+                congrats: {
                     entry: send((context) => ({
                         type: 'SPEAK',
-                        value: `Do you want me to create a meeting with ${context.partner} for ${context.day} at ${context.time}?`
+                        value: `Congrats, you won!`
                     })),
-                    on: { ENDSPEECH: 'ask' }
+                    on: { ENDSPEECH: '#root.dm.init' }
                 },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I didn't get it. Could you repeat?"),
-                    on: { ENDSPEECH: 'ask' }
-                }
             }
         },
-
-        success: {
-            entry: say(`Your meeting has been created!`),
-            on: {
-                ENDSPEECH: { actions: [assign({ partnerCounter: (context) => 0 }), assign({ dayCounter: (context) => 0 }), assign({ timeCounter: (context) => 0 })], target: 'init' }  // needed to start a new inquiry
-            }
-        }
     }
 })
 

@@ -137,9 +137,12 @@ interface SDSContext {
 
     safePoint: string;
     currentMoney: string;
-    lifelines: string;
-    remainingQuestions: string;
-    currentQuestion: string; 
+    remainingQuestions: number;
+    currentQuestion: number;
+
+    fiftyFiftyCounter: number;
+    switchCounter: number;
+    extraQuestionMoney: string;
 }
 
 type SDSEvent =
