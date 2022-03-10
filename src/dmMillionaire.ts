@@ -182,9 +182,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 firstQuestion: {
                     initial: 'choose',
                     on: {
-                        entry: {
-                            actions: [assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })]
-                        },
                         RECOGNISED: [
                             {
                                 target: '#root.dm.getHelp',
@@ -291,7 +288,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     {
                                         target: 'goodJob',
                                         cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' })], // add safe step whenever necessary
+                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }),assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
                                     },
                                     {
                                         target: '#root.dm.playMillionaire.firstQuestion',
@@ -450,7 +447,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                             {
                                                 target: '#root.dm.playMillionaire.firstQuestion.goodJob',
                                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ fiftyFiftyCounter: (context) => 1 })], // add safe step whenever necessary
+                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
                                             },
                                             {
                                                 target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty',
@@ -539,7 +536,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     entry: [send((context) => ({
                                         type: 'SPEAK',
                                         value: `Okay, let me change your question to our backup question`
-                                    })), assign({ extraQuestionMoney: (context) => "$500" }),],
+                                    })), assign({ extraQuestionMoney: (context) => "$500" }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
                                     on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
                                 },
                                 goBack: {
@@ -574,9 +571,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                 secondQuestion: {
                     initial: 'choose',
                     on: {
-                        entry: {
-                            actions: [assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })]
-                        },
                         RECOGNISED: [
                             {
                                 target: '#root.dm.getHelp',
@@ -683,7 +677,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     {
                                         target: 'goodJob',
                                         cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$1000' })], // add safe step whenever necessary
+                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$1000' }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
                                     },
                                     {
                                         target: '#root.dm.playMillionaire.secondQuestion',
@@ -842,7 +836,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                             {
                                                 target: '#root.dm.playMillionaire.secondQuestion.goodJob',
                                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$1000' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ safePoint: (context) => '$1000' })], // add safe step whenever necessary
+                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$1000' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ safePoint: (context) => '$1000' }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
                                             },
                                             {
                                                 target: '#root.dm.playMillionaire.secondQuestion.fiftyFifty',
@@ -931,7 +925,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     entry: [send((context) => ({
                                         type: 'SPEAK',
                                         value: `Okay, let me change your question to our backup question`
-                                    })), assign({ extraQuestionMoney: (context) => "$1000" }),],
+                                    })), assign({ extraQuestionMoney: (context) => "$1000" }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
                                     on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
                                 },
                                 goBack: {
