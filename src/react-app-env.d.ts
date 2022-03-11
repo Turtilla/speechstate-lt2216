@@ -143,6 +143,8 @@ interface SDSContext {
     fiftyFiftyCounter: number;
     switchCounter: number;
     extraQuestionMoney: string;
+
+    difficulty: string;
 }
 
 type SDSEvent =
