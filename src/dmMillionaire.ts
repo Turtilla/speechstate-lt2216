@@ -1736,7 +1736,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                     }
                 },
 
-                fifthQuestion: {  // change
+                fifthQuestion: {  
                     initial: 'choose',
                     on: {
                         RECOGNISED: [
@@ -1764,25 +1764,25 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
-                                target: '.checkTrue', // change
+                                target: '.checkTrue', 
                                 cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
                                     context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
                                 actions: assign({ uncertainAnswer: (context) => "1" })
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.checkFalse', 
                                 cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
                                     context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
                                 actions: assign({ uncertainAnswer: (context) => "2" })
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.checkFalse', 
                                 cond: (context) => context.recResult[0].utterance.indexOf("third") !== -1 || context.recResult[0].utterance.indexOf("three") !== -1 || context.recResult[0].utterance.indexOf("3rd") !== -1 ||
                                     context.recResult[0].utterance.indexOf("3") !== -1 || context.recResult[0].utterance.indexOf("Three") !== -1 || context.recResult[0].utterance.indexOf("Third") !== -1,
                                 actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "3" })]
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.checkFalse', 
                                 cond: (context) => context.recResult[0].utterance.indexOf("fourth") !== -1 || context.recResult[0].utterance.indexOf("four") !== -1 || context.recResult[0].utterance.indexOf("4th") !== -1 ||
                                     context.recResult[0].utterance.indexOf("4") !== -1 || context.recResult[0].utterance.indexOf("Four") !== -1 || context.recResult[0].utterance.indexOf("Fourth") !== -1,
                                 actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "4" })]
@@ -1804,27 +1804,27 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             ]
                         },
                         prompt1: {
-                            entry: send((context) => ({ // change
+                            entry: send((context) => ({ 
                                 type: 'SPEAK', // corr answer A
-                                value: `Your first question is: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                                value: `Your first question is: ${context.question5} The possible answers are: 1. ${context.corrAnswer5}, 2. ${context.incorrAnswerOne5}, 3. ${context.incorrAnswerTwo5}, 4. ${context.incorrAnswerThree5}.`
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
                             }
                         },
                         prompt2: {
-                            entry: send((context) => ({ // change
+                            entry: send((context) => ({  
                                 type: 'SPEAK', // corr answer A
-                                value: `${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                                value: `${context.question5} The possible answers are: 1. ${context.corrAnswer5}, 2. ${context.incorrAnswerOne5}, 3. ${context.incorrAnswerTwo5}, 4. ${context.incorrAnswerThree5}.`
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
                             }
                         },
                         prompt3: {
-                            entry: send((context) => ({ // change
+                            entry: send((context) => ({  
                                 type: 'SPEAK', // corr answer A
-                                value: `This is your last chance to answer this question: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                                value: `This is your last chance to answer this question: ${context.question5} The possible answers are: 1. ${context.corrAnswer5}, 2. ${context.incorrAnswerOne5}, 3. ${context.incorrAnswerTwo5}, 4. ${context.incorrAnswerThree5}.`
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
@@ -1835,7 +1835,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         },
                         nomatch: {
                             entry: say("Sorry, I did not get that."),
-                            on: { ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' } // change
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.fifthQuestion' }  
                         },
                         // check if sure
                         checkTrue: {
@@ -1844,11 +1844,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: 'goodJob',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}), // change
-                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),  
+                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$10000' }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
                                     },
                                     {
-                                        target: '#root.dm.playMillionaire.firstQuestion', // change
+                                        target: '#root.dm.playMillionaire.fifthQuestion',  
                                         cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
@@ -1862,7 +1862,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 makeSure: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                        value: `Is ${context.uncertainAnswer} your final answer?`  
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -1888,7 +1888,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         actions: assign({ counter: (context) => 0 }),
                                     },
                                     {
-                                        target: '#root.dm.playMillionaire.firstQuestion', // change
+                                        target: '#root.dm.playMillionaire.fifthQuestion', 
                                         cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
@@ -1902,7 +1902,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 makeSure: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                        value: `Is ${context.uncertainAnswer} your final answer?` 
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -1925,13 +1925,13 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             on: {
                                 RECOGNISED: [
                                     {
-                                        target: '.checkTrue', // change
+                                        target: '.checkTrue', 
                                         cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
                                             context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
                                         actions: assign({ uncertainAnswer: (context) => "1" })
                                     },
                                     {
-                                        target: '.checkFalse', // change
+                                        target: '.checkFalse', 
                                         cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
                                             context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
                                         actions: assign({ uncertainAnswer: (context) => "2" })
@@ -1950,7 +1950,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         { target: 'reducedQuestion1', cond: (context) => context.counter === 0 && context.fiftyFiftyCounter === 0 },
                                         { target: 'reducedQuestion2', cond: (context) => context.counter === 1 && context.fiftyFiftyCounter === 0 },
                                         { target: 'reducedQuestion3', cond: (context) => context.counter === 2 && context.fiftyFiftyCounter === 0 },
-                                        { target: '#root.dm.playMillionaire.firstQuestion.youFailed', cond: (context) => context.counter === 3 }, // change
+                                        { target: '#root.dm.playMillionaire.fifthQuestion.youFailed', cond: (context) => context.counter === 3 }, 
                                     ]
                                 },
                                 goBack: {
@@ -1959,14 +1959,14 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         value: `I am sorry, but you have already used up your fifty-fifty lifeline.`
                                     })),
                                     on: {
-                                        ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' // change
+                                        ENDSPEECH: '#root.dm.playMillionaire.fifthQuestion' 
                                     }
                                 },
                                 reducedQuestion1: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `Okay, let me take away two of the incorrect answers and re-read the question for you together with the remaining two options. ${context.question1}
-                                                The remaining answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
+                                        value: `Okay, let me take away two of the incorrect answers and re-read the question for you together with the remaining two options. ${context.question5}
+                                                The remaining answers are: 1. ${context.corrAnswer5}, 2. ${context.incorrAnswerTwo5}.` 
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -1975,7 +1975,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 reducedQuestion2: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `${context.question1} The remaining answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
+                                        value: `${context.question1} The remaining answers are: 1. ${context.corrAnswer5}, 2. ${context.incorrAnswerTwo5}.`  
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -1984,7 +1984,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 reducedQuestion3: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `For the final time: ${context.question1}. The answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
+                                        value: `For the final time: ${context.question1}. The answers are: 1. ${context.corrAnswer5}, 2. ${context.incorrAnswerTwo5}.`  
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -2002,12 +2002,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     on: {
                                         RECOGNISED: [
                                             {
-                                                target: '#root.dm.playMillionaire.firstQuestion.goodJob', // change
+                                                target: '#root.dm.playMillionaire.fifthQuestion.goodJob', 
                                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
+                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$10000' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
                                             },
                                             {
-                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty', // change
+                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty',  
                                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                                 actions: assign({ counter: (context) => context.counter + 1 }),
                                             },
@@ -2021,7 +2021,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         makeSure: {
                                             entry: send((context) => ({
                                                 type: 'SPEAK',
-                                                value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                                value: `Is ${context.uncertainAnswer} your final answer?`  
                                             })),
                                             on: {
                                                 ENDSPEECH: 'ask'
@@ -2042,12 +2042,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     on: {
                                         RECOGNISED: [
                                             {
-                                                target: '#root.dm.playMillionaire.firstQuestion.youFailed', // change
+                                                target: '#root.dm.playMillionaire.fifthQuestion.youFailed', 
                                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: assign({ counter: (context) => 0 }), // add safe step whenever necessary
+                                                actions: assign({ counter: (context) => 0 }), 
                                             },
                                             {
-                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty', // change
+                                                target: '#root.dm.playMillionaire.fifthQuestion.fiftyFifty', 
                                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                                 actions: assign({ counter: (context) => context.counter + 1 }),
                                             },
@@ -2061,7 +2061,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         makeSure: {
                                             entry: send((context) => ({
                                                 type: 'SPEAK',
-                                                value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                                value: `Is ${context.uncertainAnswer} your final answer?` 
                                             })),
                                             on: {
                                                 ENDSPEECH: 'ask'
@@ -2093,7 +2093,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     entry: [send((context) => ({
                                         type: 'SPEAK',
                                         value: `Okay, let me change your question to our backup question`
-                                    })), assign({ extraQuestionMoney: (context) => "$500" }), assign({ switchCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
+                                    })), assign({ extraQuestionMoney: (context) => "$10000" }), assign({ switchCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
                                     on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
                                 },
                                 goBack: {
@@ -2102,7 +2102,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         value: `I am sorry, but you have already used up your switch question lifeline.`
                                     })),
                                     on: {
-                                        ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' // change
+                                        ENDSPEECH: '#root.dm.playMillionaire.fifthQuestion' 
                                     }
                                 },
                             }
@@ -2111,21 +2111,21 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         goodJob: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
-                                value: `Correct! ${context.corrAnswer1} was the right answer. You just earned $500!` // change
+                                value: `Correct! ${context.corrAnswer5} was the right answer. You just doubled your winnings!`  
                             })),
                             on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
                         },
                         youFailed: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
-                                value: `I'm sorry, but the correct answer was ${context.corrAnswer1}. You will have to go home with ${context.safePoint}` // change
+                                value: `I'm sorry, but the correct answer was ${context.corrAnswer5}. You will have to go home with ${context.safePoint}` 
                             })),
                             on: { ENDSPEECH: '#root.dm.init' }
                         },
                     }
                 },
 
-                sixthQuestion: {  // change
+                sixthQuestion: {   
                     initial: 'choose',
                     on: {
                         RECOGNISED: [
@@ -2153,25 +2153,25 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 actions: assign({ counter: (context) => 0 })
                             },
                             {
-                                target: '.checkTrue', // change
+                                target: '.checkFalse',  
                                 cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
                                     context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
                                 actions: assign({ uncertainAnswer: (context) => "1" })
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.checkFalse',  
                                 cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
                                     context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
                                 actions: assign({ uncertainAnswer: (context) => "2" })
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.checkFalse',  
                                 cond: (context) => context.recResult[0].utterance.indexOf("third") !== -1 || context.recResult[0].utterance.indexOf("three") !== -1 || context.recResult[0].utterance.indexOf("3rd") !== -1 ||
                                     context.recResult[0].utterance.indexOf("3") !== -1 || context.recResult[0].utterance.indexOf("Three") !== -1 || context.recResult[0].utterance.indexOf("Third") !== -1,
                                 actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "3" })]
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.checkTrue', 
                                 cond: (context) => context.recResult[0].utterance.indexOf("fourth") !== -1 || context.recResult[0].utterance.indexOf("four") !== -1 || context.recResult[0].utterance.indexOf("4th") !== -1 ||
                                     context.recResult[0].utterance.indexOf("4") !== -1 || context.recResult[0].utterance.indexOf("Four") !== -1 || context.recResult[0].utterance.indexOf("Fourth") !== -1,
                                 actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "4" })]
@@ -2193,27 +2193,27 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             ]
                         },
                         prompt1: {
-                            entry: send((context) => ({ // change
-                                type: 'SPEAK', // corr answer A
-                                value: `Your first question is: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                            entry: send((context) => ({ 
+                                type: 'SPEAK', 
+                                value: `Your next question is: ${context.question6} The possible answers are: 1. ${context.incorrAnswerThree6}, 2. ${context.incorrAnswerOne6}, 3. ${context.incorrAnswerTwo6}, 4. ${context.corrAnswer6}.`
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
                             }
                         },
                         prompt2: {
-                            entry: send((context) => ({ // change
-                                type: 'SPEAK', // corr answer A
-                                value: `${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                            entry: send((context) => ({ 
+                                type: 'SPEAK', 
+                                value: `${context.question6} The possible answers are: 1. ${context.incorrAnswerThree6}, 2. ${context.incorrAnswerOne6}, 3. ${context.incorrAnswerTwo6}, 4. ${context.corrAnswer6}.`
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
                             }
                         },
                         prompt3: {
-                            entry: send((context) => ({ // change
-                                type: 'SPEAK', // corr answer A
-                                value: `This is your last chance to answer this question: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                            entry: send((context) => ({
+                                type: 'SPEAK', 
+                                value: `This is your last chance to answer this question: ${context.question6} The possible answers are: 1. ${context.incorrAnswerThree6}, 2. ${context.incorrAnswerOne6}, 3. ${context.incorrAnswerTwo6}, 4. ${context.corrAnswer6}.`
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
@@ -2224,7 +2224,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         },
                         nomatch: {
                             entry: say("Sorry, I did not get that."),
-                            on: { ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' } // change
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.sixthQuestion' }  
                         },
                         // check if sure
                         checkTrue: {
@@ -2233,11 +2233,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 RECOGNISED: [
                                     {
                                         target: 'goodJob',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}), // change
-                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),  
+                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$20000' }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
                                     },
                                     {
-                                        target: '#root.dm.playMillionaire.firstQuestion', // change
+                                        target: '#root.dm.playMillionaire.sixthQuestion', 
                                         cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
@@ -2251,7 +2251,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 makeSure: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                        value: `Is ${context.uncertainAnswer} your final answer?`  
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -2277,7 +2277,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         actions: assign({ counter: (context) => 0 }),
                                     },
                                     {
-                                        target: '#root.dm.playMillionaire.firstQuestion', // change
+                                        target: '#root.dm.playMillionaire.sixthQuestion',  
                                         cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
@@ -2291,7 +2291,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 makeSure: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                        value: `Is ${context.uncertainAnswer} your final answer?`  
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -2314,13 +2314,13 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             on: {
                                 RECOGNISED: [
                                     {
-                                        target: '.checkTrue', // change
+                                        target: '.checkFalse',  
                                         cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
                                             context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
                                         actions: assign({ uncertainAnswer: (context) => "1" })
                                     },
                                     {
-                                        target: '.checkFalse', // change
+                                        target: '.checkTrue',  
                                         cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
                                             context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
                                         actions: assign({ uncertainAnswer: (context) => "2" })
@@ -2339,7 +2339,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         { target: 'reducedQuestion1', cond: (context) => context.counter === 0 && context.fiftyFiftyCounter === 0 },
                                         { target: 'reducedQuestion2', cond: (context) => context.counter === 1 && context.fiftyFiftyCounter === 0 },
                                         { target: 'reducedQuestion3', cond: (context) => context.counter === 2 && context.fiftyFiftyCounter === 0 },
-                                        { target: '#root.dm.playMillionaire.firstQuestion.youFailed', cond: (context) => context.counter === 3 }, // change
+                                        { target: '#root.dm.playMillionaire.sixthQuestion.youFailed', cond: (context) => context.counter === 3 },  
                                     ]
                                 },
                                 goBack: {
@@ -2348,14 +2348,14 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         value: `I am sorry, but you have already used up your fifty-fifty lifeline.`
                                     })),
                                     on: {
-                                        ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' // change
+                                        ENDSPEECH: '#root.dm.playMillionaire.sixthQuestion' // change
                                     }
                                 },
                                 reducedQuestion1: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `Okay, let me take away two of the incorrect answers and re-read the question for you together with the remaining two options. ${context.question1}
-                                                The remaining answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
+                                        value: `Okay, let me take away two of the incorrect answers and re-read the question for you together with the remaining two options. ${context.question6}
+                                                The remaining answers are: 1. ${context.incorrAnswerOne6}, 2. ${context.corrAnswer6}.` // change
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -2364,7 +2364,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 reducedQuestion2: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `${context.question1} The remaining answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
+                                        value: `${context.question6} The remaining answers are: 1. ${context.incorrAnswerOne6}, 2. ${context.corrAnswer6}.`  
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -2373,7 +2373,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 reducedQuestion3: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `For the final time: ${context.question1}. The answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
+                                        value: `For the final time: ${context.question6}. The answers are: 1. ${context.incorrAnswerOne6}, 2. ${context.corrAnswer6}.`  
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -2391,12 +2391,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     on: {
                                         RECOGNISED: [
                                             {
-                                                target: '#root.dm.playMillionaire.firstQuestion.goodJob', // change
+                                                target: '#root.dm.playMillionaire.sixthQuestion.goodJob',  
                                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
+                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$20000' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
                                             },
                                             {
-                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty', // change
+                                                target: '#root.dm.playMillionaire.sixthQuestion.fiftyFifty',  
                                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                                 actions: assign({ counter: (context) => context.counter + 1 }),
                                             },
@@ -2410,7 +2410,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         makeSure: {
                                             entry: send((context) => ({
                                                 type: 'SPEAK',
-                                                value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                                value: `Is ${context.uncertainAnswer} your final answer?`  
                                             })),
                                             on: {
                                                 ENDSPEECH: 'ask'
@@ -2431,12 +2431,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     on: {
                                         RECOGNISED: [
                                             {
-                                                target: '#root.dm.playMillionaire.firstQuestion.youFailed', // change
+                                                target: '#root.dm.playMillionaire.sixthQuestion.youFailed',  
                                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: assign({ counter: (context) => 0 }), // add safe step whenever necessary
+                                                actions: assign({ counter: (context) => 0 }),  
                                             },
                                             {
-                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty', // change
+                                                target: '#root.dm.playMillionaire.sixthQuestion.fiftyFifty',  
                                                 cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                                 actions: assign({ counter: (context) => context.counter + 1 }),
                                             },
@@ -2450,7 +2450,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         makeSure: {
                                             entry: send((context) => ({
                                                 type: 'SPEAK',
-                                                value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                                value: `Is ${context.uncertainAnswer} your final answer?`  
                                             })),
                                             on: {
                                                 ENDSPEECH: 'ask'
@@ -2482,7 +2482,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                     entry: [send((context) => ({
                                         type: 'SPEAK',
                                         value: `Okay, let me change your question to our backup question`
-                                    })), assign({ extraQuestionMoney: (context) => "$500" }), assign({ switchCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
+                                    })), assign({ extraQuestionMoney: (context) => "$20000" }), assign({ switchCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
                                     on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
                                 },
                                 goBack: {
@@ -2491,7 +2491,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                         value: `I am sorry, but you have already used up your switch question lifeline.`
                                     })),
                                     on: {
-                                        ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' // change
+                                        ENDSPEECH: '#root.dm.playMillionaire.sixthQuestion'  
                                     }
                                 },
                             }
@@ -2500,14 +2500,14 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         goodJob: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
-                                value: `Correct! ${context.corrAnswer1} was the right answer. You just earned $500!` // change
+                                value: `Correct! ${context.corrAnswer6} was the right answer. You are now at $20000!` // change
                             })),
                             on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
                         },
                         youFailed: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
-                                value: `I'm sorry, but the correct answer was ${context.corrAnswer1}. You will have to go home with ${context.safePoint}` // change
+                                value: `I'm sorry, but the correct answer was ${context.corrAnswer6}. You will have to go home with ${context.safePoint}` // change
                             })),
                             on: { ENDSPEECH: '#root.dm.init' }
                         },
