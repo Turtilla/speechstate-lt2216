@@ -17,100 +17,7 @@ function scramble(array: any) {
     return array
 }
 
-const questionsList: any[] =
-    [
-        (context: SDSContext) => { context.question1 }, (context: SDSContext) => { context.question2 }, (context: SDSContext) => { context.question3 }, (context: SDSContext) => { context.question4 },
-        (context: SDSContext) => { context.question5 }, (context: SDSContext) => { context.question6 }, (context: SDSContext) => { context.question7 }, (context: SDSContext) => { context.question8 },
-        (context: SDSContext) => { context.question9 }, (context: SDSContext) => { context.question10 }, (context: SDSContext) => { context.question11 }, (context: SDSContext) => { context.question12 },
-        (context: SDSContext) => { context.question13 },
-    ];
 
-const allAnswers1: any[] = [(context: SDSContext) => { context.corrAnswer1 }, (context: SDSContext) => { context.incorrAnswerOne1 }, (context: SDSContext) => { context.incorrAnswerTwo1 }, (context: SDSContext) => { context.incorrAnswerThree1 }]
-const allAnswers2: any[] = [(context: SDSContext) => { context.corrAnswer2 }, (context: SDSContext) => { context.incorrAnswerOne2 }, (context: SDSContext) => { context.incorrAnswerTwo2 }, (context: SDSContext) => { context.incorrAnswerThree2 }]
-const allAnswers3: any[] = [(context: SDSContext) => { context.corrAnswer3 }, (context: SDSContext) => { context.incorrAnswerOne3 }, (context: SDSContext) => { context.incorrAnswerTwo3 }, (context: SDSContext) => { context.incorrAnswerThree3 }]
-const allAnswers4: any[] = [(context: SDSContext) => { context.corrAnswer4 }, (context: SDSContext) => { context.incorrAnswerOne4 }, (context: SDSContext) => { context.incorrAnswerTwo4 }, (context: SDSContext) => { context.incorrAnswerThree4 }]
-const allAnswers5: any[] = [(context: SDSContext) => { context.corrAnswer5 }, (context: SDSContext) => { context.incorrAnswerOne5 }, (context: SDSContext) => { context.incorrAnswerTwo5 }, (context: SDSContext) => { context.incorrAnswerThree5 }]
-const allAnswers6: any[] = [(context: SDSContext) => { context.corrAnswer6 }, (context: SDSContext) => { context.incorrAnswerOne6 }, (context: SDSContext) => { context.incorrAnswerTwo6 }, (context: SDSContext) => { context.incorrAnswerThree6 }]
-const allAnswers7: any[] = [(context: SDSContext) => { context.corrAnswer7 }, (context: SDSContext) => { context.incorrAnswerOne7 }, (context: SDSContext) => { context.incorrAnswerTwo7 }, (context: SDSContext) => { context.incorrAnswerThree7 }]
-const allAnswers8: any[] =[(context: SDSContext) => { context.corrAnswer8 }, (context: SDSContext) => { context.incorrAnswerOne8 }, (context: SDSContext) => { context.incorrAnswerTwo8 }, (context: SDSContext) => { context.incorrAnswerThree8 }]
-const allAnswers9: any[] =[(context: SDSContext) => { context.corrAnswer9 }, (context: SDSContext) => { context.incorrAnswerOne9 }, (context: SDSContext) => { context.incorrAnswerTwo9 }, (context: SDSContext) => { context.incorrAnswerThree9 }]
-const allAnswers10: any[] = [(context: SDSContext) => { context.corrAnswer10 }, (context: SDSContext) => { context.incorrAnswerOne10 }, (context: SDSContext) => { context.incorrAnswerTwo10 }, (context: SDSContext) => { context.incorrAnswerThree10 }]
-const allAnswers11: any[] = [(context: SDSContext) => { context.corrAnswer11 }, (context: SDSContext) => { context.incorrAnswerOne11 }, (context: SDSContext) => { context.incorrAnswerTwo11 }, (context: SDSContext) => { context.incorrAnswerThree11 }]
-const allAnswers12: any[] =[(context: SDSContext) => { context.corrAnswer12 }, (context: SDSContext) => { context.incorrAnswerOne12 }, (context: SDSContext) => { context.incorrAnswerTwo12 }, (context: SDSContext) => { context.incorrAnswerThree12 }]
-const allAnswers13: any[] = [(context: SDSContext) => { context.corrAnswer13 }, (context: SDSContext) => { context.incorrAnswerOne13 }, (context: SDSContext) => { context.incorrAnswerTwo13 }, (context: SDSContext) => { context.incorrAnswerThree13 }]
-
-const allAnswersTotal: any[] = [
-    scramble(allAnswers1), scramble(allAnswers2), scramble(allAnswers3), scramble(allAnswers4), scramble(allAnswers5), scramble(allAnswers6), scramble(allAnswers7), scramble(allAnswers8),
-    scramble(allAnswers9), scramble(allAnswers10), scramble(allAnswers11), scramble(allAnswers12) // might need to scramble elsewhere
-]
-
-const correctAnswersList: any[] = [
-    (context: SDSContext) => { context.corrAnswer1 }, (context: SDSContext) => { context.corrAnswer2 }, (context: SDSContext) => { context.corrAnswer3 }, (context: SDSContext) => { context.corrAnswer4 },
-    (context: SDSContext) => { context.corrAnswer5 }, (context: SDSContext) => { context.corrAnswer6 }, (context: SDSContext) => { context.corrAnswer7 }, (context: SDSContext) => { context.corrAnswer8 },
-    (context: SDSContext) => { context.corrAnswer9 }, (context: SDSContext) => { context.corrAnswer10 }, (context: SDSContext) => { context.corrAnswer11 }, (context: SDSContext) => { context.corrAnswer12 },
-    (context: SDSContext) => { context.corrAnswer13 },
-];
-
-const question1: string[] = [
-    `Okay, your first question is: ${questionsList[0]} The possible answers are: 1. ${allAnswersTotal[0][0]}, 2. ${allAnswersTotal[0][1]}, 3. ${allAnswersTotal[0][2]}, 4. ${allAnswersTotal[0][3]}.`,  //1st
-    `Now, the second question is: ${questionsList[1]} The answers are: 1. ${allAnswersTotal[1][0]}, 2. ${allAnswersTotal[1][1]}, 3. ${allAnswersTotal[1][2]}, 4. ${allAnswersTotal[1][3]}.`,  //2nd
-    `For the next question: ${questionsList[2]} The possible answers are: 1. ${allAnswersTotal[2][0]}, 2. ${allAnswersTotal[2][1]}, 3. ${allAnswersTotal[2][2]}, 4. ${allAnswersTotal[2][3]}.`,  //3rd
-    `Your next question is the following: ${questionsList[3]} You can choose from these answers: 1. ${allAnswersTotal[3][0]}, 2. ${allAnswersTotal[3][1]}, 3. ${allAnswersTotal[3][2]}, 4. ${allAnswersTotal[3][3]}.`,  //4th
-    `Your fifth question is: ${questionsList[4]} You have the following possible answers: 1. ${allAnswersTotal[4][0]}, 2. ${allAnswersTotal[4][1]}, 3. ${allAnswersTotal[4][2]}, 4. ${allAnswersTotal[4][3]}.`,  //5th
-    `Now, the next question is: ${questionsList[5]} The answers are: 1. ${allAnswersTotal[5][0]}, 2. ${allAnswersTotal[5][1]}, 3. ${allAnswersTotal[5][2]}, 4. ${allAnswersTotal[5][3]}.`,  //6th
-    `This is what we have for the next question: ${questionsList[6]} You can answer: 1. ${allAnswersTotal[6][0]}, 2. ${allAnswersTotal[6][1]}, 3. ${allAnswersTotal[6][2]}, 4. ${allAnswersTotal[6][3]}.`,  //7th
-    `The eight question is: ${questionsList[7]} The possible answers are: 1. ${allAnswersTotal[7][0]}, 2. ${allAnswersTotal[7][1]}, 3. ${allAnswersTotal[7][2]}, 4. ${allAnswersTotal[7][3]}.`,  //8th
-    `You're going strong! Up next: ${questionsList[8]} Choose from the following answers: 1. ${allAnswersTotal[8][0]}, 2. ${allAnswersTotal[8][1]}, 3. ${allAnswersTotal[8][2]}, 4. ${allAnswersTotal[8][3]}.`,  //9th
-    `Okay, your tenth question is: ${questionsList[9]} The answers are: 1. ${allAnswersTotal[9][0]}, 2. ${allAnswersTotal[9][1]}, 3. ${allAnswersTotal[9][2]}, 4. ${allAnswersTotal[9][3]}.`,  //10th
-    `Now, your penultimate question is: ${questionsList[10]} You have the following possible answers: 1. ${allAnswersTotal[10][0]}, 2. ${allAnswersTotal[10][1]}, 3. ${allAnswersTotal[10][2]}, 4. ${allAnswersTotal[10][3]}.`,  //11th
-    `Your final question is: ${questionsList[11]} Choose from the following: 1. ${allAnswersTotal[11][0]}, 2. ${allAnswersTotal[11][1]}, 3. ${allAnswersTotal[11][2]}, 4. ${allAnswersTotal[11][3]}.`,  //12th
-    `Your backup question is: ${questionsList[12]} The answers are: 1. ${allAnswersTotal[12][0]}, 2. ${allAnswersTotal[12][1]}, 3. ${allAnswersTotal[12][2]}, 4. ${allAnswersTotal[12][3]}.`,  //13th
-];
-
-
-const question2: string[] = [
-    `Let me repeat: ${questionsList[0]} The answers are: 1. ${allAnswersTotal[0][0]}, 2. ${allAnswersTotal[0][1]}, 3. ${allAnswersTotal[0][2]}, 4. ${allAnswersTotal[0][3]}.`,  //1st
-    `Let me repeat your question: ${questionsList[1]} You have the following possible answers: 1. ${allAnswersTotal[1][0]}, 2. ${allAnswersTotal[1][1]}, 3. ${allAnswersTotal[1][2]}, 4. ${allAnswersTotal[1][3]}.`,  //2nd
-    `I will say it again: ${questionsList[2]} Choose from the following answers: 1. ${allAnswersTotal[2][0]}, 2. ${allAnswersTotal[2][1]}, 3. ${allAnswersTotal[2][2]}, 4. ${allAnswersTotal[2][3]}.`,  //3rd
-    `Let me repeat:  ${questionsList[3]} The possible answers are: 1. ${allAnswersTotal[3][0]}, 2. ${allAnswersTotal[3][1]}, 3. ${allAnswersTotal[3][2]}, 4. ${allAnswersTotal[3][3]}.`,  //4th
-    `I will say it again: ${questionsList[4]} The answers are: 1. ${allAnswersTotal[4][0]}, 2. ${allAnswersTotal[4][1]}, 3. ${allAnswersTotal[4][2]}, 4. ${allAnswersTotal[4][3]}.`,  //5th
-    `Let me repeat your question: ${questionsList[5]} Choose from the following answers: 1. ${allAnswersTotal[5][0]}, 2. ${allAnswersTotal[5][1]}, 3. ${allAnswersTotal[5][2]}, 4. ${allAnswersTotal[5][3]}.`,  //6th
-    `I will say it again: ${questionsList[6]} The possible answers are: 1. ${allAnswersTotal[6][0]}, 2. ${allAnswersTotal[6][1]}, 3. ${allAnswersTotal[6][2]}, 4. ${allAnswersTotal[6][3]}.`,  //7th
-    `I will read again: ${questionsList[7]} The answers are: 1. ${allAnswersTotal[7][0]}, 2. ${allAnswersTotal[7][1]}, 3. ${allAnswersTotal[7][2]}, 4. ${allAnswersTotal[7][3]}.`,  //8th
-    `I will say it again: ${questionsList[8]} The possible answers are: 1. ${allAnswersTotal[8][0]}, 2. ${allAnswersTotal[8][1]}, 3. ${allAnswersTotal[8][2]}, 4. ${allAnswersTotal[8][3]}.`,  //9th
-    `Let me repeat:  ${questionsList[9]} Choose from the following answers: 1. ${allAnswersTotal[9][0]}, 2. ${allAnswersTotal[9][1]}, 3. ${allAnswersTotal[9][2]}, 4. ${allAnswersTotal[9][3]}.`,  //10th
-    `I will read it again: ${questionsList[10]} The answers are: 1. ${allAnswersTotal[10][0]}, 2. ${allAnswersTotal[10][1]}, 3. ${allAnswersTotal[10][2]}, 4. ${allAnswersTotal[10][3]}.`,  //11th
-    `Let me repeat your final question:  ${questionsList[11]} You have the following possible answers: 1. ${allAnswersTotal[11][0]}, 2. ${allAnswersTotal[11][1]}, 3. ${allAnswersTotal[11][2]}, 4. ${allAnswersTotal[11][3]}.`,  //12th
-    `Let me repeat your backup question:  ${questionsList[12]} The possible answers are: 1. ${allAnswersTotal[12][0]}, 2. ${allAnswersTotal[12][1]}, 3. ${allAnswersTotal[12][2]}, 4. ${allAnswersTotal[12][3]}.`,  //13th
-];
-
-
-const question3: string[] = [
-    `I will say it one last time: ${questionsList[0]} The possible answers are: 1. ${allAnswersTotal[0][0]}, 2. ${allAnswersTotal[0][1]}, 3. ${allAnswersTotal[0][2]}, 4. ${allAnswersTotal[0][3]}.`,  //1st
-    `I will repeat it one last time: ${questionsList[1]} The answers are: 1. ${allAnswersTotal[1][0]}, 2. ${allAnswersTotal[1][1]}, 3. ${allAnswersTotal[1][2]}, 4. ${allAnswersTotal[1][3]}.`,  //2nd
-    `I will say it one last time: ${questionsList[2]} Choose from the following answers: 1. ${allAnswersTotal[2][0]}, 2. ${allAnswersTotal[2][1]}, 3. ${allAnswersTotal[2][2]}, 4. ${allAnswersTotal[2][3]}.`,  //3rd
-    `For the last time: ${questionsList[3]} The possible answers are: 1. ${allAnswersTotal[3][0]}, 2. ${allAnswersTotal[3][1]}, 3. ${allAnswersTotal[3][2]}, 4. ${allAnswersTotal[3][3]}.`,  //4th
-    `I will read it one last time: ${questionsList[4]} You can choose from these answers: 1. ${allAnswersTotal[4][0]}, 2. ${allAnswersTotal[4][1]}, 3. ${allAnswersTotal[4][2]}, 4. ${allAnswersTotal[4][3]}.`,  //5th
-    `I will repeat the question one last time: ${questionsList[5]} The possible answers are: 1. ${allAnswersTotal[5][0]}, 2. ${allAnswersTotal[5][1]}, 3. ${allAnswersTotal[5][2]}, 4. ${allAnswersTotal[5][3]}.`,  //6th
-    `I will say it one last time: ${questionsList[6]} The answers are: 1. ${allAnswersTotal[6][0]}, 2. ${allAnswersTotal[6][1]}, 3. ${allAnswersTotal[6][2]}, 4. ${allAnswersTotal[6][3]}.`,  //7th
-    `I will read it one last time: ${questionsList[7]} Choose from the following answers: 1. ${allAnswersTotal[7][0]}, 2. ${allAnswersTotal[7][1]}, 3. ${allAnswersTotal[7][2]}, 4. ${allAnswersTotal[7][3]}.`,  //8th
-    `I will say the question one last time: ${questionsList[8]} The possible answers are: 1. ${allAnswersTotal[8][0]}, 2. ${allAnswersTotal[8][1]}, 3. ${allAnswersTotal[8][2]}, 4. ${allAnswersTotal[8][3]}.`,  //9th
-    `I will repeat it one last time: ${questionsList[9]} Choose from the following answers: 1. ${allAnswersTotal[9][0]}, 2. ${allAnswersTotal[9][1]}, 3. ${allAnswersTotal[9][2]}, 4. ${allAnswersTotal[9][3]}.`,  //10th
-    `For the last time: ${questionsList[10]} The answers are: 1. ${allAnswersTotal[10][0]}, 2. ${allAnswersTotal[10][1]}, 3. ${allAnswersTotal[10][2]}, 4. ${allAnswersTotal[10][3]}.`,  //11th
-    `I will read it one last time: ${questionsList[11]} You can choose from these answers: 1. ${allAnswersTotal[11][0]}, 2. ${allAnswersTotal[11][1]}, 3. ${allAnswersTotal[11][2]}, 4. ${allAnswersTotal[11][3]}.`,  //12th
-    `I will say your backup question one last time: ${questionsList[12]} The possible answers are: 1. ${allAnswersTotal[12][0]}, 2. ${allAnswersTotal[12][1]}, 3. ${allAnswersTotal[12][2]}, 4. ${allAnswersTotal[12][3]}.`,  //13th
-];
-
-
-const question5050_1: string[] = [];
-const question5050_2: string[] = [];
-const question5050_3: string[] = [];
-
-const finalAnswer: string[] = [];
-
-const chitChat1: string[] = [];
-const chitChat2: string[] = [];
-const chitChat3: string[] = [];
 
 const ans_grammar: { [index: string]: { confirmation?: string, negation?: string, help?: string } } = {
 
@@ -223,86 +130,266 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         assign({ fiftyFiftyCounter: (context) => 0 }),
                         assign({ switchCounter: (context) => 0 }),
 
-                        assign({ question1: (context, event) => event.data.results[0].question }),
-                        assign({ corrAnswer1: (context, event) => event.data.results[0].correct_answer }),
-                        assign({ incorrAnswerOne1: (context, event) => event.data.results[0].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo1: (context, event) => event.data.results[0].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree1: (context, event) => event.data.results[0].incorrect_answers[2] }),
+                        assign({
+                            questionsList: (context, event) => [
+                                event.data.results[0].question, event.data.results[1].question, event.data.results[2].question, event.data.results[3].question, event.data.results[4].question, event.data.results[5].question,
+                                event.data.results[6].question, event.data.results[7].question, event.data.results[8].question, event.data.results[9].question, event.data.results[10].question, event.data.results[11].question,
+                                event.data.results[12].question
+                            ]
+                        }),
+                        assign({
+                            correctAnswers: (context, event) => [
+                                event.data.results[0].correct_answer, event.data.results[1].correct_answer, event.data.results[2].correct_answer, event.data.results[3].correct_answer, event.data.results[4].correct_answer,
+                                event.data.results[5].correct_answer, event.data.results[6].correct_answer, event.data.results[7].correct_answer, event.data.results[8].correct_answer, event.data.results[9].correct_answer,
+                                event.data.results[10].correct_answer, event.data.results[11].correct_answer, event.data.results[12].correct_answer
+                            ]
+                        }),
+                        assign({
+                            allAnswersTotal: (context, event) => [
+                                scramble([event.data.results[0].correct_answer, event.data.results[0].incorrect_answers[0], event.data.results[0].incorrect_answers[1], event.data.results[0].incorrect_answers[2]]),
+                                scramble([event.data.results[1].correct_answer, event.data.results[1].incorrect_answers[0], event.data.results[1].incorrect_answers[1], event.data.results[1].incorrect_answers[2]]),
+                                scramble([event.data.results[2].correct_answer, event.data.results[2].incorrect_answers[0], event.data.results[2].incorrect_answers[1], event.data.results[2].incorrect_answers[2]]),
+                                scramble([event.data.results[3].correct_answer, event.data.results[3].incorrect_answers[0], event.data.results[3].incorrect_answers[1], event.data.results[3].incorrect_answers[2]]),
+                                scramble([event.data.results[4].correct_answer, event.data.results[4].incorrect_answers[0], event.data.results[4].incorrect_answers[1], event.data.results[4].incorrect_answers[2]]),
+                                scramble([event.data.results[5].correct_answer, event.data.results[5].incorrect_answers[0], event.data.results[5].incorrect_answers[1], event.data.results[5].incorrect_answers[2]]),
+                                scramble([event.data.results[6].correct_answer, event.data.results[6].incorrect_answers[0], event.data.results[6].incorrect_answers[1], event.data.results[6].incorrect_answers[2]]),
+                                scramble([event.data.results[7].correct_answer, event.data.results[7].incorrect_answers[0], event.data.results[7].incorrect_answers[1], event.data.results[7].incorrect_answers[2]]),
+                                scramble([event.data.results[8].correct_answer, event.data.results[8].incorrect_answers[0], event.data.results[8].incorrect_answers[1], event.data.results[8].incorrect_answers[2]]),
+                                scramble([event.data.results[9].correct_answer, event.data.results[9].incorrect_answers[0], event.data.results[9].incorrect_answers[1], event.data.results[9].incorrect_answers[2]]),
+                                scramble([event.data.results[10].correct_answer, event.data.results[10].incorrect_answers[0], event.data.results[10].incorrect_answers[1], event.data.results[10].incorrect_answers[2]]),
+                                scramble([event.data.results[11].correct_answer, event.data.results[11].incorrect_answers[0], event.data.results[11].incorrect_answers[1], event.data.results[11].incorrect_answers[2]]),
+                                scramble([event.data.results[12].correct_answer, event.data.results[12].incorrect_answers[0], event.data.results[12].incorrect_answers[1], event.data.results[12].incorrect_answers[2]]),
+                            ]
+                        }),
+                        assign({
+                            all5050Answers: (context, event) => [
+                                scramble([event.data.results[0].correct_answer, event.data.results[0].incorrect_answers[0]]),
+                                scramble([event.data.results[1].correct_answer, event.data.results[1].incorrect_answers[0]]),
+                                scramble([event.data.results[2].correct_answer, event.data.results[2].incorrect_answers[0]]),
+                                scramble([event.data.results[3].correct_answer, event.data.results[3].incorrect_answers[0]]),
+                                scramble([event.data.results[4].correct_answer, event.data.results[4].incorrect_answers[0]]),
+                                scramble([event.data.results[5].correct_answer, event.data.results[5].incorrect_answers[0]]),
+                                scramble([event.data.results[6].correct_answer, event.data.results[6].incorrect_answers[0]]),
+                                scramble([event.data.results[7].correct_answer, event.data.results[7].incorrect_answers[0]]),
+                                scramble([event.data.results[8].correct_answer, event.data.results[8].incorrect_answers[0]]),
+                                scramble([event.data.results[9].correct_answer, event.data.results[9].incorrect_answers[0]]),
+                                scramble([event.data.results[10].correct_answer, event.data.results[10].incorrect_answers[0]]),
+                                scramble([event.data.results[11].correct_answer, event.data.results[11].incorrect_answers[0]]),
+                                scramble([event.data.results[12].correct_answer, event.data.results[12].incorrect_answers[0]]),
+                            ]
+                        }),
 
-                        assign({ question2: (context, event) => event.data.results[1].question }),
-                        assign({ corrAnswer2: (context, event) => event.data.results[1].correct_answer }),
-                        assign({ incorrAnswerOne2: (context, event) => event.data.results[1].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo2: (context, event) => event.data.results[1].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree2: (context, event) => event.data.results[1].incorrect_answers[2] }),
+                        assign({
+                            questions1: (context, event) => [
+                                `Okay, your first question is: ${context.questionsList[0]} The possible answers are: 1. ${context.allAnswersTotal[0][0]}, 2. ${context.allAnswersTotal[0][1]}, 3. ${context.allAnswersTotal[0][2]}, 4. ${context.allAnswersTotal[0][3]}.`,  //1st
+                                `Now, the second question is: ${context.questionsList[1]} The answers are: 1. ${context.allAnswersTotal[1][0]}, 2. ${context.allAnswersTotal[1][1]}, 3. ${context.allAnswersTotal[1][2]}, 4. ${context.allAnswersTotal[1][3]}.`,  //2nd
+                                `For the next question: ${context.questionsList[2]} The possible answers are: 1. ${context.allAnswersTotal[2][0]}, 2. ${context.allAnswersTotal[2][1]}, 3. ${context.allAnswersTotal[2][2]}, 4. ${context.allAnswersTotal[2][3]}.`,  //3rd
+                                `Your next question is the following: ${context.questionsList[3]} You can choose from these answers: 1. ${context.allAnswersTotal[3][0]}, 2. ${context.allAnswersTotal[3][1]}, 3. ${context.allAnswersTotal[3][2]}, 4. ${context.allAnswersTotal[3][3]}.`,  //4th
+                                `Your fifth question is: ${context.questionsList[4]} You have the following possible answers: 1. ${context.allAnswersTotal[4][0]}, 2. ${context.allAnswersTotal[4][1]}, 3. ${context.allAnswersTotal[4][2]}, 4. ${context.allAnswersTotal[4][3]}.`,  //5th
+                                `Now, the next question is: ${context.questionsList[5]} The answers are: 1. ${context.allAnswersTotal[5][0]}, 2. ${context.allAnswersTotal[5][1]}, 3. ${context.allAnswersTotal[5][2]}, 4. ${context.allAnswersTotal[5][3]}.`,  //6th
+                                `This is what we have for the next question: ${context.questionsList[6]} You can answer: 1. ${context.allAnswersTotal[6][0]}, 2. ${context.allAnswersTotal[6][1]}, 3. ${context.allAnswersTotal[6][2]}, 4. ${context.allAnswersTotal[6][3]}.`,  //7th
+                                `The eight question is: ${context.questionsList[7]} The possible answers are: 1. ${context.allAnswersTotal[7][0]}, 2. ${context.allAnswersTotal[7][1]}, 3. ${context.allAnswersTotal[7][2]}, 4. ${context.allAnswersTotal[7][3]}.`,  //8th
+                                `You're going strong! Up next: ${context.questionsList[8]} Choose from the following answers: 1. ${context.allAnswersTotal[8][0]}, 2. ${context.allAnswersTotal[8][1]}, 3. ${context.allAnswersTotal[8][2]}, 4. ${context.allAnswersTotal[8][3]}.`,  //9th
+                                `Okay, your tenth question is: ${context.questionsList[9]} The answers are: 1. ${context.allAnswersTotal[9][0]}, 2. ${context.allAnswersTotal[9][1]}, 3. ${context.allAnswersTotal[9][2]}, 4. ${context.allAnswersTotal[9][3]}.`,  //10th
+                                `Now, your penultimate question is: ${context.questionsList[10]} You have the following possible answers: 1. ${context.allAnswersTotal[10][0]}, 2. ${context.allAnswersTotal[10][1]}, 3. ${context.allAnswersTotal[10][2]}, 4. ${context.allAnswersTotal[10][3]}.`,  //11th
+                                `Your final question is: ${context.questionsList[11]} Choose from the following: 1. ${context.allAnswersTotal[11][0]}, 2. ${context.allAnswersTotal[11][1]}, 3. ${context.allAnswersTotal[11][2]}, 4. ${context.allAnswersTotal[11][3]}.`,  //12th
+                                `Your backup question is: ${context.questionsList[12]} The answers are: 1. ${context.allAnswersTotal[12][0]}, 2. ${context.allAnswersTotal[12][1]}, 3. ${context.allAnswersTotal[12][2]}, 4. ${context.allAnswersTotal[12][3]}.`,  //13th
+                            ]
+                        }),
+                        assign({
+                            questions2: (context, event) => [
+                                `Let me repeat: ${context.questionsList[0]} The answers are: 1. ${context.allAnswersTotal[0][0]}, 2. ${context.allAnswersTotal[0][1]}, 3. ${context.allAnswersTotal[0][2]}, 4. ${context.allAnswersTotal[0][3]}.`,  //1st
+                                `Let me repeat your question: ${context.questionsList[1]} You have the following possible answers: 1. ${context.allAnswersTotal[1][0]}, 2. ${context.allAnswersTotal[1][1]}, 3. ${context.allAnswersTotal[1][2]}, 4. ${context.allAnswersTotal[1][3]}.`,  //2nd
+                                `I will say it again: ${context.questionsList[2]} Choose from the following answers: 1. ${context.allAnswersTotal[2][0]}, 2. ${context.allAnswersTotal[2][1]}, 3. ${context.allAnswersTotal[2][2]}, 4. ${context.allAnswersTotal[2][3]}.`,  //3rd
+                                `Let me repeat:  ${context.questionsList[3]} The possible answers are: 1. ${context.allAnswersTotal[3][0]}, 2. ${context.allAnswersTotal[3][1]}, 3. ${context.allAnswersTotal[3][2]}, 4. ${context.allAnswersTotal[3][3]}.`,  //4th
+                                `I will say it again: ${context.questionsList[4]} The answers are: 1. ${context.allAnswersTotal[4][0]}, 2. ${context.allAnswersTotal[4][1]}, 3. ${context.allAnswersTotal[4][2]}, 4. ${context.allAnswersTotal[4][3]}.`,  //5th
+                                `Let me repeat your question: ${context.questionsList[5]} Choose from the following answers: 1. ${context.allAnswersTotal[5][0]}, 2. ${context.allAnswersTotal[5][1]}, 3. ${context.allAnswersTotal[5][2]}, 4. ${context.allAnswersTotal[5][3]}.`,  //6th
+                                `I will say it again: ${context.questionsList[6]} The possible answers are: 1. ${context.allAnswersTotal[6][0]}, 2. ${context.allAnswersTotal[6][1]}, 3. ${context.allAnswersTotal[6][2]}, 4. ${context.allAnswersTotal[6][3]}.`,  //7th
+                                `I will read again: ${context.questionsList[7]} The answers are: 1. ${context.allAnswersTotal[7][0]}, 2. ${context.allAnswersTotal[7][1]}, 3. ${context.allAnswersTotal[7][2]}, 4. ${context.allAnswersTotal[7][3]}.`,  //8th
+                                `I will say it again: ${context.questionsList[8]} The possible answers are: 1. ${context.allAnswersTotal[8][0]}, 2. ${context.allAnswersTotal[8][1]}, 3. ${context.allAnswersTotal[8][2]}, 4. ${context.allAnswersTotal[8][3]}.`,  //9th
+                                `Let me repeat:  ${context.questionsList[9]} Choose from the following answers: 1. ${context.allAnswersTotal[9][0]}, 2. ${context.allAnswersTotal[9][1]}, 3. ${context.allAnswersTotal[9][2]}, 4. ${context.allAnswersTotal[9][3]}.`,  //10th
+                                `I will read it again: ${context.questionsList[10]} The answers are: 1. ${context.allAnswersTotal[10][0]}, 2. ${context.allAnswersTotal[10][1]}, 3. ${context.allAnswersTotal[10][2]}, 4. ${context.allAnswersTotal[10][3]}.`,  //11th
+                                `Let me repeat your final question:  ${context.questionsList[11]} You have the following possible answers: 1. ${context.allAnswersTotal[11][0]}, 2. ${context.allAnswersTotal[11][1]}, 3. ${context.allAnswersTotal[11][2]}, 4. ${context.allAnswersTotal[11][3]}.`,  //12th
+                                `Let me repeat your backup question:  ${context.questionsList[12]} The possible answers are: 1. ${context.allAnswersTotal[12][0]}, 2. ${context.allAnswersTotal[12][1]}, 3. ${context.allAnswersTotal[12][2]}, 4. ${context.allAnswersTotal[12][3]}.`,  //13th
+                            ]
+                        }),
+                        assign({
+                            questions3: (context, event) => [
+                                `I will say it one last time: ${context.questionsList[0]} The possible answers are: 1. ${context.allAnswersTotal[0][0]}, 2. ${context.allAnswersTotal[0][1]}, 3. ${context.allAnswersTotal[0][2]}, 4. ${context.allAnswersTotal[0][3]}.`,  //1st
+                                `I will repeat it one last time: ${context.questionsList[1]} The answers are: 1. ${context.allAnswersTotal[1][0]}, 2. ${context.allAnswersTotal[1][1]}, 3. ${context.allAnswersTotal[1][2]}, 4. ${context.allAnswersTotal[1][3]}.`,  //2nd
+                                `I will say it one last time: ${context.questionsList[2]} Choose from the following answers: 1. ${context.allAnswersTotal[2][0]}, 2. ${context.allAnswersTotal[2][1]}, 3. ${context.allAnswersTotal[2][2]}, 4. ${context.allAnswersTotal[2][3]}.`,  //3rd
+                                `For the last time: ${context.questionsList[3]} The possible answers are: 1. ${context.allAnswersTotal[3][0]}, 2. ${context.allAnswersTotal[3][1]}, 3. ${context.allAnswersTotal[3][2]}, 4. ${context.allAnswersTotal[3][3]}.`,  //4th
+                                `I will read it one last time: ${context.questionsList[4]} You can choose from these answers: 1. ${context.allAnswersTotal[4][0]}, 2. ${context.allAnswersTotal[4][1]}, 3. ${context.allAnswersTotal[4][2]}, 4. ${context.allAnswersTotal[4][3]}.`,  //5th
+                                `I will repeat the question one last time: ${context.questionsList[5]} The possible answers are: 1. ${context.allAnswersTotal[5][0]}, 2. ${context.allAnswersTotal[5][1]}, 3. ${context.allAnswersTotal[5][2]}, 4. ${context.allAnswersTotal[5][3]}.`,  //6th
+                                `I will say it one last time: ${context.questionsList[6]} The answers are: 1. ${context.allAnswersTotal[6][0]}, 2. ${context.allAnswersTotal[6][1]}, 3. ${context.allAnswersTotal[6][2]}, 4. ${context.allAnswersTotal[6][3]}.`,  //7th
+                                `I will read it one last time: ${context.questionsList[7]} Choose from the following answers: 1. ${context.allAnswersTotal[7][0]}, 2. ${context.allAnswersTotal[7][1]}, 3. ${context.allAnswersTotal[7][2]}, 4. ${context.allAnswersTotal[7][3]}.`,  //8th
+                                `I will say the question one last time: ${context.questionsList[8]} The possible answers are: 1. ${context.allAnswersTotal[8][0]}, 2. ${context.allAnswersTotal[8][1]}, 3. ${context.allAnswersTotal[8][2]}, 4. ${context.allAnswersTotal[8][3]}.`,  //9th
+                                `I will repeat it one last time: ${context.questionsList[9]} Choose from the following answers: 1. ${context.allAnswersTotal[9][0]}, 2. ${context.allAnswersTotal[9][1]}, 3. ${context.allAnswersTotal[9][2]}, 4. ${context.allAnswersTotal[9][3]}.`,  //10th
+                                `For the last time: ${context.questionsList[10]} The answers are: 1. ${context.allAnswersTotal[10][0]}, 2. ${context.allAnswersTotal[10][1]}, 3. ${context.allAnswersTotal[10][2]}, 4. ${context.allAnswersTotal[10][3]}.`,  //11th
+                                `I will read it one last time: ${context.questionsList[11]} You can choose from these answers: 1. ${context.allAnswersTotal[11][0]}, 2. ${context.allAnswersTotal[11][1]}, 3. ${context.allAnswersTotal[11][2]}, 4. ${context.allAnswersTotal[11][3]}.`,  //12th
+                                `I will say your backup question one last time: ${context.questionsList[12]} The possible answers are: 1. ${context.allAnswersTotal[12][0]}, 2. ${context.allAnswersTotal[12][1]}, 3. ${context.allAnswersTotal[12][2]}, 4. ${context.allAnswersTotal[12][3]}.`,  //13th
+                            ]
+                        }),
 
-                        assign({ question3: (context, event) => event.data.results[2].question }),
-                        assign({ corrAnswer3: (context, event) => event.data.results[2].correct_answer }),
-                        assign({ incorrAnswerOne3: (context, event) => event.data.results[2].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo3: (context, event) => event.data.results[2].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree3: (context, event) => event.data.results[2].incorrect_answers[2] }),
+                        assign({
+                            questions5050_2: (context, event) => [
+                                `After removing two incorrect answers the question is: ${context.questionsList[0]} The possible answers are: 1. ${context.all5050Answers[0][0]}, 2. ${context.all5050Answers[0][1]}.`,  //1st
+                                `After removing two incorrect answers the question is: ${context.questionsList[1]} The answers are: 1. ${context.all5050Answers[1][0]}, 2. ${context.all5050Answers[1][1]}.`,  //2nd
+                                `After removing two incorrect answers the question is: ${context.questionsList[2]} Choose from the following answers: 1. ${context.all5050Answers[2][0]}, 2. ${context.all5050Answers[2][1]}.`,  //3rd
+                                `After removing two incorrect answers the question is: ${context.questionsList[3]} The possible answers are: 1. ${context.all5050Answers[3][0]}, 2. ${context.all5050Answers[3][1]}.`,  //4th
+                                `After removing two incorrect answers the question is: ${context.questionsList[4]} You can choose from these answers: 1. ${context.all5050Answers[4][0]}, 2. ${context.all5050Answers[4][1]}.`,  //5th
+                                `After removing two incorrect answers the question is: ${context.questionsList[5]} The possible answers are: 1. ${context.all5050Answers[5][0]}, 2. ${context.all5050Answers[5][1]}.`,  //6th
+                                `After removing two incorrect answers the question is: ${context.questionsList[6]} The answers are: 1. ${context.all5050Answers[6][0]}, 2. ${context.all5050Answers[6][1]}.`,  //7th
+                                `After removing two incorrect answers the question is: ${context.questionsList[7]} Choose from the following answers: 1. ${context.all5050Answers[7][0]}, 2. ${context.all5050Answers[7][1]}.`,  //8th
+                                `After removing two incorrect answers the question is: ${context.questionsList[8]} The possible answers are: 1. ${context.all5050Answers[8][0]}, 2. ${context.all5050Answers[8][1]}.`,  //9th
+                                `After removing two incorrect answers the question is: ${context.questionsList[9]} Choose from the following answers: 1. ${context.all5050Answers[9][0]}, 2. ${context.all5050Answers[9][1]}.`,  //10th
+                                `After removing two incorrect answers the question is: ${context.questionsList[10]} The answers are: 1. ${context.all5050Answers[10][0]}, 2. ${context.all5050Answers[10][1]}.`,  //11th
+                                `After removing two incorrect answers the question is: ${context.questionsList[11]} You can choose from these answers: 1. ${context.all5050Answers[11][0]}, 2. ${context.all5050Answers[11][1]}.`,  //12th
+                                `After removing two incorrect answers your backup question is: ${context.questionsList[12]} The possible answers are: 1. ${context.all5050Answers[12][0]}, 2. ${context.all5050Answers[12][1]}.`,  //13th
+                            ]
+                        }),
+                        assign({
+                            questions5050_2: (context, event) => [
+                                `Let me reiterate it: ${context.questionsList[0]} The possible answers are: 1. ${context.all5050Answers[0][0]}, 2. ${context.all5050Answers[0][1]}.`,  //1st
+                                `I will say it one more time: ${context.questionsList[1]} The answers are: 1. ${context.all5050Answers[1][0]}, 2. ${context.all5050Answers[1][1]}.`,  //2nd
+                                `I will repeat once more: ${context.questionsList[2]} Choose from the following answers: 1. ${context.all5050Answers[2][0]}, 2. ${context.all5050Answers[2][1]}.`,  //3rd
+                                `I will say it one more time: ${context.questionsList[3]} The possible answers are: 1. ${context.all5050Answers[3][0]}, 2. ${context.all5050Answers[3][1]}.`,  //4th
+                                `Once again: ${context.questionsList[4]} You can choose from these answers: 1. ${context.all5050Answers[4][0]}, 2. ${context.all5050Answers[4][1]}.`,  //5th
+                                `Let me reiterate it:: ${context.questionsList[5]} The possible answers are: 1. ${context.all5050Answers[5][0]}, 2. ${context.all5050Answers[5][1]}.`,  //6th
+                                `Let me repeat the question: ${context.questionsList[6]} The answers are: 1. ${context.all5050Answers[6][0]}, 2. ${context.all5050Answers[6][1]}.`,  //7th
+                                `Let me reiterate it: ${context.questionsList[7]} Choose from the following answers: 1. ${context.all5050Answers[7][0]}, 2. ${context.all5050Answers[7][1]}.`,  //8th
+                                `I will say it one more time ${context.questionsList[8]} The possible answers are: 1. ${context.all5050Answers[8][0]}, 2. ${context.all5050Answers[8][1]}.`,  //9th
+                                `I will say the question one more time: ${context.questionsList[9]} Choose from the following answers: 1. ${context.all5050Answers[9][0]}, 2. ${context.all5050Answers[9][1]}.`,  //10th
+                                `I will repeat it once again: ${context.questionsList[10]} The answers are: 1. ${context.all5050Answers[10][0]}, 2. ${context.all5050Answers[10][1]}.`,  //11th
+                                `I will read it out once more: ${context.questionsList[11]} You can choose from these answers: 1. ${context.all5050Answers[11][0]}, 2. ${context.all5050Answers[11][1]}.`,  //12th
+                                `I will say your backup question again: ${context.questionsList[12]} The possible answers are: 1. ${context.all5050Answers[12][0]}, 2. ${context.all5050Answers[12][1]}.`,  //13th
+                            ]
+                        }),
+                        assign({
+                            questions5050_3: (context, event) => [
+                                `I will read it one last time: ${context.questionsList[0]} The possible answers are: 1. ${context.all5050Answers[0][0]}, 2. ${context.all5050Answers[0][1]}.`,  //1st
+                                `I will say it one last time: ${context.questionsList[1]} The answers are: 1. ${context.all5050Answers[1][0]}, 2. ${context.all5050Answers[1][1]}.`,  //2nd
+                                `I will repeat it one last time: ${context.questionsList[2]} Choose from the following answers: 1. ${context.all5050Answers[2][0]}, 2. ${context.all5050Answers[2][1]}.`,  //3rd
+                                `I will say it one last time: ${context.questionsList[3]} The possible answers are: 1. ${context.all5050Answers[3][0]}, 2. ${context.all5050Answers[3][1]}.`,  //4th
+                                `For the last time: ${context.questionsList[4]} You can choose from these answers: 1. ${context.all5050Answers[4][0]}, 2. ${context.all5050Answers[4][1]}.`,  //5th
+                                `I will read it one last time: ${context.questionsList[5]} The possible answers are: 1. ${context.all5050Answers[5][0]}, 2. ${context.all5050Answers[5][1]}.`,  //6th
+                                `I will repeat the question one last time: ${context.questionsList[6]} The answers are: 1. ${context.all5050Answers[6][0]}, 2. ${context.all5050Answers[6][1]}.`,  //7th
+                                `I will say it one last time: ${context.questionsList[7]} Choose from the following answers: 1. ${context.all5050Answers[7][0]}, 2. ${context.all5050Answers[7][1]}.`,  //8th
+                                `I will read it one last time: ${context.questionsList[8]} The possible answers are: 1. ${context.all5050Answers[8][0]}, 2. ${context.all5050Answers[8][1]}.`,  //9th
+                                `I will say the question one last time: ${context.questionsList[9]} Choose from the following answers: 1. ${context.all5050Answers[9][0]}, 2. ${context.all5050Answers[9][1]}.`,  //10th
+                                `I will repeat it one last time: ${context.questionsList[10]} The answers are: 1. ${context.all5050Answers[10][0]}, 2. ${context.all5050Answers[10][1]}.`,  //11th
+                                `I will read it one last time: ${context.questionsList[11]} You can choose from these answers: 1. ${context.all5050Answers[11][0]}, 2. ${context.all5050Answers[11][1]}.`,  //12th
+                                `I will say your backup question one last time: ${context.questionsList[12]} The possible answers are: 1. ${context.all5050Answers[12][0]}, 2. ${context.all5050Answers[12][1]}.`,  //13th
+                            ]
+                        }),
 
-                        assign({ question4: (context, event) => event.data.results[3].question }),
-                        assign({ corrAnswer4: (context, event) => event.data.results[3].correct_answer }),
-                        assign({ incorrAnswerOne4: (context, event) => event.data.results[3].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo4: (context, event) => event.data.results[3].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree4: (context, event) => event.data.results[3].incorrect_answers[2] }),
+                        assign({
+                            finalAnswer: (context, event) => [
+                                `Is that your final answer?`,  //1st
+                                `Are you sure it's that?`,  //2nd
+                                `Are you sure that is the correct answer?`,  //3rd
+                                `Is that your final answer?`,  //4th
+                                `Are you 100% sure about that?`,  //5th
+                                `So is that your final answer?`,  //6th
+                                `Is that your final answer?`,  //7th
+                                `Are you sure it's that?`,  //8th
+                                `Are you sure that is the correct answer?`,  //9th
+                                `Is that your final answer?`,  //10th
+                                `Are you 100% sure about that?`,  //11th
+                                `So is that your final answer?`,  //12th
+                                `Is that your final answer?`,  //13th
+                            ]
+                        }),
 
-                        assign({ question5: (context, event) => event.data.results[4].question }),
-                        assign({ corrAnswer5: (context, event) => event.data.results[4].correct_answer }),
-                        assign({ incorrAnswerOne5: (context, event) => event.data.results[4].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo5: (context, event) => event.data.results[4].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree5: (context, event) => event.data.results[4].incorrect_answers[2] }),
+                        assign({
+                            chitChat1: (context, event) => [
+                                `Okay, are you ready to continue?`,  //1st
+                                `Okay, do you want to continue?`,  //2nd
+                                `Ready to continue?`,  //3rd
+                                `Okay, are you ready to continue?`,  //4th
+                                `Okay, do you want to continue?`,  //5th
+                                `Ready to continue?`,  //6th
+                                `Shall we continue?`,  //7th
+                                `Okay, do you want to continue?`,  //8th
+                                `Are you ready to continue?`,  //9th
+                                `Up for the next question?`,  //10th
+                                `Okay, shall we continue?`,  //11th
+                                `Are you ready to continue?`,  //12th
+                                `Ready to continue?`,  //13th
+                            ]
+                        }),
+                        assign({
+                            chitChat2: (context, event) => [
+                                `Are you ready for the next question?`,  //1st
+                                `Are you ready to move on to the next question?`,  //2nd
+                                `Shall we continue to the next question?`,  //3rd
+                                `Are you ready for the next question?`,  //4th
+                                `Are you ready to move on?`,  //5th
+                                `Are you ready?`,  //6th
+                                `Are you ready to continue?`,  //7th
+                                `Are you ready for the next question?`,  //8th
+                                `Are you ready to move on?`,  //9th
+                                `Are you ready to continue to the next question?`,  //10th
+                                `Shall we move on to the next question?`,  //11th
+                                `Are you ready to move on to the next question?`,  //12th
+                                `Are you ready to move on?`,  //13th
+                            ]
+                        }),
+                        assign({
+                            chitChat3: (context, event) => [
+                                `Are you ready to move on to the next question?`,  //1st
+                                `Shall we continue to the next question?`,  //2nd
+                                `Are you ready for the next question?`,  //3rd
+                                `Are you ready to move on?`,  //4th
+                                `Are you ready?`,  //5th
+                                `Are you ready to continue?`,  //6th
+                                `Are you ready for the next question?`,  //7th
+                                `Are you ready to move on?`,  //8th
+                                `Are you ready to continue to the next question?`,  //9th
+                                `Shall we move on to the next question?`,  //10th
+                                `Are you ready to move on to the next question?`,  //11th
+                                `Are you ready to move on?`,  //12th
+                                `Are you ready for the next question?`,  //13th
+                            ]
+                        }),
 
-                        assign({ question6: (context, event) => event.data.results[5].question }),
-                        assign({ corrAnswer6: (context, event) => event.data.results[5].correct_answer }),
-                        assign({ incorrAnswerOne6: (context, event) => event.data.results[5].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo6: (context, event) => event.data.results[5].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree6: (context, event) => event.data.results[5].incorrect_answers[2] }),
+                        assign({
+                            correctCongrats: (context, event) => [
+                                `Correct! That was the right answer. You just earned $500!`,  //1st
+                                `That was the correct answer. You just doubled your winnings!`, //2nd
+                                `Congrats! It was the right answer. You just earned another $1000!`, //3rd
+                                `Awesome! It was the correct answer. You're at $5000!`, //4th
+                                `That was indeed the right answer. You doubled your reward!`, //5th
+                                `Correct! It was the answer. You just earned 10000$!`, //6th
+                                `Congrats! The answer was what you said. You are at $50000!`, //7th
+                                `Great job! It was the right answer. You just earned $25000 more!`, //8th
+                                `Correct! That was the answer. You doubled your winnings again!`, //9th
+                                `Awesome! It was the right answer. You now have $250000`, //10th
+                                `That was the right correct answer. You doubled your potential reward!`, //11th
+                                `Correct! It was the right answer. Congratulations! This was your last question, which means you just won a million dollars! You are a millionaire!`, //12th
+                            ]
+                        }),
 
-                        assign({ question7: (context, event) => event.data.results[6].question }),
-                        assign({ corrAnswer7: (context, event) => event.data.results[6].correct_answer }),
-                        assign({ incorrAnswerOne7: (context, event) => event.data.results[6].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo7: (context, event) => event.data.results[6].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree7: (context, event) => event.data.results[6].incorrect_answers[2] }),
-
-                        assign({ question8: (context, event) => event.data.results[7].question }),
-                        assign({ corrAnswer8: (context, event) => event.data.results[7].correct_answer }),
-                        assign({ incorrAnswerOne8: (context, event) => event.data.results[7].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo8: (context, event) => event.data.results[7].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree8: (context, event) => event.data.results[7].incorrect_answers[2] }),
-
-                        assign({ question9: (context, event) => event.data.results[8].question }),
-                        assign({ corrAnswer9: (context, event) => event.data.results[8].correct_answer }),
-                        assign({ incorrAnswerOne9: (context, event) => event.data.results[8].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo9: (context, event) => event.data.results[8].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree9: (context, event) => event.data.results[8].incorrect_answers[2] }),
-
-                        assign({ question10: (context, event) => event.data.results[9].question }),
-                        assign({ corrAnswer10: (context, event) => event.data.results[9].correct_answer }),
-                        assign({ incorrAnswerOne10: (context, event) => event.data.results[9].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo10: (context, event) => event.data.results[9].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree10: (context, event) => event.data.results[9].incorrect_answers[2] }),
-
-                        assign({ question11: (context, event) => event.data.results[10].question }),
-                        assign({ corrAnswer11: (context, event) => event.data.results[10].correct_answer }),
-                        assign({ incorrAnswerOne11: (context, event) => event.data.results[10].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo11: (context, event) => event.data.results[10].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree11: (context, event) => event.data.results[10].incorrect_answers[2] }),
-
-                        assign({ question12: (context, event) => event.data.results[11].question }),
-                        assign({ corrAnswer12: (context, event) => event.data.results[11].correct_answer }),
-                        assign({ incorrAnswerOne12: (context, event) => event.data.results[11].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo12: (context, event) => event.data.results[11].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree12: (context, event) => event.data.results[11].incorrect_answers[2] }),
-
-                        assign({ question13: (context, event) => event.data.results[12].question }),
-                        assign({ corrAnswer13: (context, event) => event.data.results[12].correct_answer }),
-                        assign({ incorrAnswerOne13: (context, event) => event.data.results[12].incorrect_answers[0] }),
-                        assign({ incorrAnswerTwo13: (context, event) => event.data.results[12].incorrect_answers[1] }),
-                        assign({ incorrAnswerThree13: (context, event) => event.data.results[12].incorrect_answers[2] }),
-
+                        assign({
+                            moneyStages: (context, event) => [
+                                `$500`,  //1st
+                                `$1000`,  //2nd
+                                `$2000`,  //3rd
+                                `$5000`,  //4th
+                                `$10000`,  //5th
+                                `$20000`,  //6th
+                                `$50000`,  //7th
+                                `$75000`,  //8th
+                                `$150000`,  //9th
+                                `$250000`,  //10th
+                                `$500000`,  //11th
+                                `$1000000`,  //12th
+                            ]
+                        }),
+                      
                         (context, event) => console.log(context, event),
                         (context, event) => console.log(event.data.results[0])
+
                     ]
                 },
                 onError: {
@@ -312,13 +399,13 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
         },
 
         playMillionaire: {
-            initial: 'firstQuestion',
+            initial: 'competitionQuestion',
             states: {
                 hist: {
                     type: 'history'
                 },
 
-                firstQuestion: {  // change
+                competitionQuestion: {  // change
                     initial: 'choose',
                     on: {
                         RECOGNISED: [
@@ -335,25 +422,25 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 cond: (context) => context.recResult[0].utterance.indexOf("repeat") !== -1 || context.recResult[0].utterance.indexOf("Repeat") !== -1
                             },
                             {
-                                target: '.checkTrue', // change
+                                target: '.check',
                                 cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
                                     context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
                                 actions: assign({ uncertainAnswer: (context) => "1" })
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.check', 
                                 cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
                                     context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
                                 actions: assign({ uncertainAnswer: (context) => "2" })
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.check', 
                                 cond: (context) => context.recResult[0].utterance.indexOf("third") !== -1 || context.recResult[0].utterance.indexOf("three") !== -1 || context.recResult[0].utterance.indexOf("3rd") !== -1 ||
                                     context.recResult[0].utterance.indexOf("3") !== -1 || context.recResult[0].utterance.indexOf("Three") !== -1 || context.recResult[0].utterance.indexOf("Third") !== -1,
                                 actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "3" })]
                             },
                             {
-                                target: '.checkFalse', // change
+                                target: '.check',
                                 cond: (context) => context.recResult[0].utterance.indexOf("fourth") !== -1 || context.recResult[0].utterance.indexOf("four") !== -1 || context.recResult[0].utterance.indexOf("4th") !== -1 ||
                                     context.recResult[0].utterance.indexOf("4") !== -1 || context.recResult[0].utterance.indexOf("Four") !== -1 || context.recResult[0].utterance.indexOf("Fourth") !== -1,
                                 actions: [assign({ counter: (context) => 0 }), assign({ uncertainAnswer: (context) => "4" })]
@@ -375,27 +462,27 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                             ]
                         },
                         prompt1: {
-                            entry: send((context) => ({ // change
-                                type: 'SPEAK', // corr answer A
-                                value: question1[context.currentQuestion]
+                            entry: send((context) => ({ 
+                                type: 'SPEAK', 
+                                value: context.questions1[context.currentQuestion]
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
                             }
                         },
                         prompt2: {
-                            entry: send((context) => ({ // change
-                                type: 'SPEAK', // corr answer A
-                                value: question2[context.currentQuestion]
+                            entry: send((context) => ({ 
+                                type: 'SPEAK', 
+                                value: context.questions2[context.currentQuestion]
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
                             }
                         },
                         prompt3: {
-                            entry: send((context) => ({ // change
-                                type: 'SPEAK', // corr answer A
-                                value: question3[context.currentQuestion]
+                            entry: send((context) => ({ 
+                                type: 'SPEAK', 
+                                value: context.questions3[context.currentQuestion]
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
@@ -406,60 +493,49 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         },
                         nomatch: {
                             entry: say("Sorry, I did not get that."),
-                            on: { ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' } // change
+                            on: { ENDSPEECH: '#root.dm.playMillionaire.competitionQuestion' } 
                         },
                         // check if sure
-                        checkTrue: {
+                        check: {
                             initial: 'makeSure',
                             on: {
                                 RECOGNISED: [
                                     {
                                         target: 'goodJob',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}), // change
-                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) &&
+                                            context.correctAnswers[context.currentQuestion] === context.allAnswersTotal[context.currentQuestion][Number(context.uncertainAnswer) - 1] &&
+                                            context.currentQuestion === 1, // change
+                                        actions: [
+                                            assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => context.moneyStages[context.currentQuestion] }),
+                                            assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 }),
+                                            assign({ safePoint: (context) => '$1000' })
+                                        ], // safe step
                                     },
                                     {
-                                        target: '#root.dm.playMillionaire.firstQuestion', // change
-                                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                        actions: assign({ counter: (context) => context.counter + 1 }),
+                                        target: 'goodJob',
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) &&
+                                            context.correctAnswers[context.currentQuestion] === context.allAnswersTotal[context.currentQuestion][Number(context.uncertainAnswer) - 1] &&
+                                            context.currentQuestion === 6, // change
+                                        actions: [
+                                            assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => context.moneyStages[context.currentQuestion] }),
+                                            assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 }),
+                                            assign({ safePoint: (context) => '$50000' })
+                                        ], // safe step
                                     },
                                     {
-                                        target: '.nomatch',
-                                    }
-                                ],
-                                TIMEOUT: { target: '.makeSure' }
-                            },
-                            states: {
-                                makeSure: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `Is ${context.uncertainAnswer} your final answer?` // change
-                                    })),
-                                    on: {
-                                        ENDSPEECH: 'ask'
-                                    }
-                                },
-                                ask: {
-                                    entry: send('LISTEN'),
-                                },
-                                nomatch: {
-                                    entry: say("Sorry, I did not get that."),
-                                    on: { ENDSPEECH: 'makeSure' }
-                                },
-
-                            },
-                        },
-                        checkFalse: {
-                            initial: 'makeSure',
-                            on: {
-                                RECOGNISED: [
+                                        target: 'goodJob',
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) &&
+                                            context.correctAnswers[context.currentQuestion] === context.allAnswersTotal[context.currentQuestion][Number(context.uncertainAnswer) - 1] &&
+                                            context.currentQuestion !== 1 && context.currentQuestion !== 6, // change
+                                        actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => context.moneyStages[context.currentQuestion] }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
+                                    },
                                     {
                                         target: 'youFailed',
-                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                        actions: assign({ counter: (context) => 0 }),
+                                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}) &&
+                                            context.correctAnswers[context.currentQuestion] !== context.allAnswersTotal[context.currentQuestion][Number(context.uncertainAnswer) - 1],
                                     },
                                     {
-                                        target: '#root.dm.playMillionaire.firstQuestion', // change
+                                        target: '#root.dm.playMillionaire.competitionQuestion', // change
                                         cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                         actions: assign({ counter: (context) => context.counter + 1 }),
                                     },
@@ -473,7 +549,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 makeSure: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `Is ${context.uncertainAnswer} your final answer?` // change
+                                        value: context.finalAnswer[context.currentQuestion] // change
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -489,18 +565,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
 
                             },
                         },
+                        
                         // final states
                         goodJob: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
-                                value: `Correct! ${context.corrAnswer1} was the right answer. You just earned $500!` // change
+                                value: context.correctCongrats[context.currentQuestion-1] // change
                             })),
                             on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
                         },
                         youFailed: {
                             entry: send((context) => ({
                                 type: 'SPEAK',
-                                value: `I'm sorry, but the correct answer was ${context.corrAnswer1}. You will have to go home with ${context.safePoint}` // change
+                                value: `I'm sorry, but the correct answer was ${context.correctAnswers[context.currentQuestion]}. You will have to go home with ${context.safePoint}` // change
                             })),
                             on: { ENDSPEECH: '#root.dm.init' }
                         },
@@ -674,7 +751,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 makeSure: {
                                     entry: send((context) => ({
                                         type: 'SPEAK',
-                                        value: `Is ${context.uncertainAnswer} your final answer?`
+                                        value: context.finalAnswer[context.currentQuestion]
                                     })),
                                     on: {
                                         ENDSPEECH: 'ask'
@@ -915,7 +992,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 cond: (context) => context.recResult[0].utterance.indexOf("questions") !== -1 || context.recResult[0].utterance.indexOf("Questions") !== -1
                             },
                             {
-                                target: '.selectNext',
+                                target: '#root.dm.playMillionaire.competitionQuestion',
                                 cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
                                 actions: assign({ counter: (context) => 0 })
                             },
@@ -1001,22 +1078,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 value: `I am sorry, but you must proceed or decide to leave now!`
                             })),
                             on: { ENDSPEECH: '#root.dm.playMillionaire.chitChat' }
-                        },
-                        selectNext: {
-                            always: [
-                                { target: '#root.dm.playMillionaire.secondQuestion', cond: (context) => context.currentQuestion === 1 },
-                                { target: '#root.dm.playMillionaire.thirdQuestion', cond: (context) => context.currentQuestion === 2 },
-                                { target: '#root.dm.playMillionaire.fourthQuestion', cond: (context) => context.currentQuestion === 3 },
-                                { target: '#root.dm.playMillionaire.fifthQuestion', cond: (context) => context.currentQuestion === 4 },
-                                { target: '#root.dm.playMillionaire.sixthQuestion', cond: (context) => context.currentQuestion === 5 },
-                                { target: '#root.dm.playMillionaire.seventhQuestion', cond: (context) => context.currentQuestion === 6 },
-                                { target: '#root.dm.playMillionaire.eighthQuestion', cond: (context) => context.currentQuestion === 7 },
-                                { target: '#root.dm.playMillionaire.ninthQuestion', cond: (context) => context.currentQuestion === 8 },
-                                { target: '#root.dm.playMillionaire.tenthQuestion', cond: (context) => context.currentQuestion === 9 },
-                                { target: '#root.dm.playMillionaire.eleventhQuestion', cond: (context) => context.currentQuestion === 10 },
-                                { target: '#root.dm.playMillionaire.twelfthQuestion', cond: (context) => context.currentQuestion === 11 },
-                            ]
-                        }
+                        },        
                     }
                 },
             }

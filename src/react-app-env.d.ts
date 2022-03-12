@@ -145,6 +145,31 @@ interface SDSContext {
     extraQuestionMoney: string;
 
     difficulty: string;
+
+    // different approach
+
+    questionsList: string[];
+    correctAnswers: string[];
+    allAnswersTotal: string[][];
+    all5050Answers: string[][];
+
+    questions1: string[];
+    questions2: string[];
+    questions3: string[];
+
+    questions5050_1: string[];
+    questions5050_2: string[];
+    questions5050_3: string[];
+
+    finalAnswer: string[];
+    correctCongrats: string[];
+
+    chitChat1: string[];
+    chitChat2: string[];
+    chitChat3: string[];
+
+    moneyStages: string[];
+
 }
 
 type SDSEvent =
