@@ -1011,6 +1011,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                     states: {
                         choose: {
                             always: [
+                                { target: '#root.dm.init', cond: (context) => context.currentQuestion === 12 },
                                 { target: 'prompt1', cond: (context) => context.counter === 0 },
                                 { target: 'prompt2', cond: (context) => context.counter === 1 },
                                 { target: 'prompt3', cond: (context) => context.counter === 2 },
