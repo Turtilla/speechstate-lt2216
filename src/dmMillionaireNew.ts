@@ -14,6 +14,7 @@ function scramble(array: any) {
         let j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+    return array
 }
 
 const questionsList: any[] =
@@ -24,22 +25,24 @@ const questionsList: any[] =
         (context: SDSContext) => { context.question13 },
     ];
 
-const allAnswersList: any[][] = [
-    [(context: SDSContext) => { context.corrAnswer1 }, (context: SDSContext) => { context.incorrAnswerOne1 }, (context: SDSContext) => { context.incorrAnswerTwo1 }, (context: SDSContext) => { context.incorrAnswerThree1 }],
-    [(context: SDSContext) => { context.corrAnswer2 }, (context: SDSContext) => { context.incorrAnswerOne2 }, (context: SDSContext) => { context.incorrAnswerTwo2 }, (context: SDSContext) => { context.incorrAnswerThree2 }],
-    [(context: SDSContext) => { context.corrAnswer3 }, (context: SDSContext) => { context.incorrAnswerOne3 }, (context: SDSContext) => { context.incorrAnswerTwo3 }, (context: SDSContext) => { context.incorrAnswerThree3 }],
-    [(context: SDSContext) => { context.corrAnswer4 }, (context: SDSContext) => { context.incorrAnswerOne4 }, (context: SDSContext) => { context.incorrAnswerTwo4 }, (context: SDSContext) => { context.incorrAnswerThree4 }],
-    [(context: SDSContext) => { context.corrAnswer5 }, (context: SDSContext) => { context.incorrAnswerOne5 }, (context: SDSContext) => { context.incorrAnswerTwo5 }, (context: SDSContext) => { context.incorrAnswerThree5 }],
-    [(context: SDSContext) => { context.corrAnswer6 }, (context: SDSContext) => { context.incorrAnswerOne6 }, (context: SDSContext) => { context.incorrAnswerTwo6 }, (context: SDSContext) => { context.incorrAnswerThree6 }],
-    [(context: SDSContext) => { context.corrAnswer7 }, (context: SDSContext) => { context.incorrAnswerOne7 }, (context: SDSContext) => { context.incorrAnswerTwo7 }, (context: SDSContext) => { context.incorrAnswerThree7 }],
-    [(context: SDSContext) => { context.corrAnswer8 }, (context: SDSContext) => { context.incorrAnswerOne8 }, (context: SDSContext) => { context.incorrAnswerTwo8 }, (context: SDSContext) => { context.incorrAnswerThree8 }],
-    [(context: SDSContext) => { context.corrAnswer9 }, (context: SDSContext) => { context.incorrAnswerOne9 }, (context: SDSContext) => { context.incorrAnswerTwo9 }, (context: SDSContext) => { context.incorrAnswerThree9 }],
-    [(context: SDSContext) => { context.corrAnswer10 }, (context: SDSContext) => { context.incorrAnswerOne10 }, (context: SDSContext) => { context.incorrAnswerTwo10 }, (context: SDSContext) => { context.incorrAnswerThree10 }],
-    [(context: SDSContext) => { context.corrAnswer11 }, (context: SDSContext) => { context.incorrAnswerOne11 }, (context: SDSContext) => { context.incorrAnswerTwo11 }, (context: SDSContext) => { context.incorrAnswerThree11 }],
-    [(context: SDSContext) => { context.corrAnswer12 }, (context: SDSContext) => { context.incorrAnswerOne12 }, (context: SDSContext) => { context.incorrAnswerTwo12 }, (context: SDSContext) => { context.incorrAnswerThree12 }],
-    [(context: SDSContext) => { context.corrAnswer13 }, (context: SDSContext) => { context.incorrAnswerOne13 }, (context: SDSContext) => { context.incorrAnswerTwo13 }, (context: SDSContext) => { context.incorrAnswerThree13 }],
-];
+const allAnswers1: any[] = [(context: SDSContext) => { context.corrAnswer1 }, (context: SDSContext) => { context.incorrAnswerOne1 }, (context: SDSContext) => { context.incorrAnswerTwo1 }, (context: SDSContext) => { context.incorrAnswerThree1 }]
+const allAnswers2: any[] = [(context: SDSContext) => { context.corrAnswer2 }, (context: SDSContext) => { context.incorrAnswerOne2 }, (context: SDSContext) => { context.incorrAnswerTwo2 }, (context: SDSContext) => { context.incorrAnswerThree2 }]
+const allAnswers3: any[] = [(context: SDSContext) => { context.corrAnswer3 }, (context: SDSContext) => { context.incorrAnswerOne3 }, (context: SDSContext) => { context.incorrAnswerTwo3 }, (context: SDSContext) => { context.incorrAnswerThree3 }]
+const allAnswers4: any[] = [(context: SDSContext) => { context.corrAnswer4 }, (context: SDSContext) => { context.incorrAnswerOne4 }, (context: SDSContext) => { context.incorrAnswerTwo4 }, (context: SDSContext) => { context.incorrAnswerThree4 }]
+const allAnswers5: any[] = [(context: SDSContext) => { context.corrAnswer5 }, (context: SDSContext) => { context.incorrAnswerOne5 }, (context: SDSContext) => { context.incorrAnswerTwo5 }, (context: SDSContext) => { context.incorrAnswerThree5 }]
+const allAnswers6: any[] = [(context: SDSContext) => { context.corrAnswer6 }, (context: SDSContext) => { context.incorrAnswerOne6 }, (context: SDSContext) => { context.incorrAnswerTwo6 }, (context: SDSContext) => { context.incorrAnswerThree6 }]
+const allAnswers7: any[] = [(context: SDSContext) => { context.corrAnswer7 }, (context: SDSContext) => { context.incorrAnswerOne7 }, (context: SDSContext) => { context.incorrAnswerTwo7 }, (context: SDSContext) => { context.incorrAnswerThree7 }]
+const allAnswers8: any[] =[(context: SDSContext) => { context.corrAnswer8 }, (context: SDSContext) => { context.incorrAnswerOne8 }, (context: SDSContext) => { context.incorrAnswerTwo8 }, (context: SDSContext) => { context.incorrAnswerThree8 }]
+const allAnswers9: any[] =[(context: SDSContext) => { context.corrAnswer9 }, (context: SDSContext) => { context.incorrAnswerOne9 }, (context: SDSContext) => { context.incorrAnswerTwo9 }, (context: SDSContext) => { context.incorrAnswerThree9 }]
+const allAnswers10: any[] = [(context: SDSContext) => { context.corrAnswer10 }, (context: SDSContext) => { context.incorrAnswerOne10 }, (context: SDSContext) => { context.incorrAnswerTwo10 }, (context: SDSContext) => { context.incorrAnswerThree10 }]
+const allAnswers11: any[] = [(context: SDSContext) => { context.corrAnswer11 }, (context: SDSContext) => { context.incorrAnswerOne11 }, (context: SDSContext) => { context.incorrAnswerTwo11 }, (context: SDSContext) => { context.incorrAnswerThree11 }]
+const allAnswers12: any[] =[(context: SDSContext) => { context.corrAnswer12 }, (context: SDSContext) => { context.incorrAnswerOne12 }, (context: SDSContext) => { context.incorrAnswerTwo12 }, (context: SDSContext) => { context.incorrAnswerThree12 }]
+const allAnswers13: any[] = [(context: SDSContext) => { context.corrAnswer13 }, (context: SDSContext) => { context.incorrAnswerOne13 }, (context: SDSContext) => { context.incorrAnswerTwo13 }, (context: SDSContext) => { context.incorrAnswerThree13 }]
 
+const allAnswersTotal: any[] = [
+    scramble(allAnswers1), scramble(allAnswers2), scramble(allAnswers3), scramble(allAnswers4), scramble(allAnswers5), scramble(allAnswers6), scramble(allAnswers7), scramble(allAnswers8),
+    scramble(allAnswers9), scramble(allAnswers10), scramble(allAnswers11), scramble(allAnswers12) // might need to scramble elsewhere
+]
 
 const correctAnswersList: any[] = [
     (context: SDSContext) => { context.corrAnswer1 }, (context: SDSContext) => { context.corrAnswer2 }, (context: SDSContext) => { context.corrAnswer3 }, (context: SDSContext) => { context.corrAnswer4 },
@@ -48,32 +51,66 @@ const correctAnswersList: any[] = [
     (context: SDSContext) => { context.corrAnswer13 },
 ];
 
+const question1: string[] = [
+    `Okay, your first question is: ${questionsList[0]} The possible answers are: 1. ${allAnswersTotal[0][0]}, 2. ${allAnswersTotal[0][1]}, 3. ${allAnswersTotal[0][2]}, 4. ${allAnswersTotal[0][3]}.`,  //1st
+    `Now, the second question is: ${questionsList[1]} The answers are: 1. ${allAnswersTotal[1][0]}, 2. ${allAnswersTotal[1][1]}, 3. ${allAnswersTotal[1][2]}, 4. ${allAnswersTotal[1][3]}.`,  //2nd
+    `For the next question: ${questionsList[2]} The possible answers are: 1. ${allAnswersTotal[2][0]}, 2. ${allAnswersTotal[2][1]}, 3. ${allAnswersTotal[2][2]}, 4. ${allAnswersTotal[2][3]}.`,  //3rd
+    `Your next question is the following: ${questionsList[3]} You can choose from these answers: 1. ${allAnswersTotal[3][0]}, 2. ${allAnswersTotal[3][1]}, 3. ${allAnswersTotal[3][2]}, 4. ${allAnswersTotal[3][3]}.`,  //4th
+    `Your fifth question is: ${questionsList[4]} You have the following possible answers: 1. ${allAnswersTotal[4][0]}, 2. ${allAnswersTotal[4][1]}, 3. ${allAnswersTotal[4][2]}, 4. ${allAnswersTotal[4][3]}.`,  //5th
+    `Now, the next question is: ${questionsList[5]} The answers are: 1. ${allAnswersTotal[5][0]}, 2. ${allAnswersTotal[5][1]}, 3. ${allAnswersTotal[5][2]}, 4. ${allAnswersTotal[5][3]}.`,  //6th
+    `This is what we have for the next question: ${questionsList[6]} You can answer: 1. ${allAnswersTotal[6][0]}, 2. ${allAnswersTotal[6][1]}, 3. ${allAnswersTotal[6][2]}, 4. ${allAnswersTotal[6][3]}.`,  //7th
+    `The eight question is: ${questionsList[7]} The possible answers are: 1. ${allAnswersTotal[7][0]}, 2. ${allAnswersTotal[7][1]}, 3. ${allAnswersTotal[7][2]}, 4. ${allAnswersTotal[7][3]}.`,  //8th
+    `You're going strong! Up next: ${questionsList[8]} Choose from the following answers: 1. ${allAnswersTotal[8][0]}, 2. ${allAnswersTotal[8][1]}, 3. ${allAnswersTotal[8][2]}, 4. ${allAnswersTotal[8][3]}.`,  //9th
+    `Okay, your tenth question is: ${questionsList[9]} The answers are: 1. ${allAnswersTotal[9][0]}, 2. ${allAnswersTotal[9][1]}, 3. ${allAnswersTotal[9][2]}, 4. ${allAnswersTotal[9][3]}.`,  //10th
+    `Now, your penultimate question is: ${questionsList[10]} You have the following possible answers: 1. ${allAnswersTotal[10][0]}, 2. ${allAnswersTotal[10][1]}, 3. ${allAnswersTotal[10][2]}, 4. ${allAnswersTotal[10][3]}.`,  //11th
+    `Your final question is: ${questionsList[11]} Choose from the following: 1. ${allAnswersTotal[11][0]}, 2. ${allAnswersTotal[11][1]}, 3. ${allAnswersTotal[11][2]}, 4. ${allAnswersTotal[11][3]}.`,  //12th
+    `Your backup question is: ${questionsList[12]} The answers are: 1. ${allAnswersTotal[12][0]}, 2. ${allAnswersTotal[12][1]}, 3. ${allAnswersTotal[12][2]}, 4. ${allAnswersTotal[12][3]}.`,  //13th
+];
 
-(context: SDSContext) => {
-    const question1: string[] = [
-        `Okay, your first question is: ${questionsList[0]} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`,
-    ]
-}
-(context: SDSContext) => {
-    const question2: string[] = [
-        `${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
-    ]
-}
-(context: SDSContext) => {
-    const question3: string[] = [
-        `This is your last chance to answer this question: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
-    ]
-}
 
-(context: SDSContext) => { const question5050_1: string[] = [] }
-(context: SDSContext) => { const question5050_2: string[] = [] }
-(context: SDSContext) => { const question5050_3: string[] = [] }
+const question2: string[] = [
+    `Let me repeat: ${questionsList[0]} The answers are: 1. ${allAnswersTotal[0][0]}, 2. ${allAnswersTotal[0][1]}, 3. ${allAnswersTotal[0][2]}, 4. ${allAnswersTotal[0][3]}.`,  //1st
+    `Let me repeat your question: ${questionsList[1]} You have the following possible answers: 1. ${allAnswersTotal[1][0]}, 2. ${allAnswersTotal[1][1]}, 3. ${allAnswersTotal[1][2]}, 4. ${allAnswersTotal[1][3]}.`,  //2nd
+    `I will say it again: ${questionsList[2]} Choose from the following answers: 1. ${allAnswersTotal[2][0]}, 2. ${allAnswersTotal[2][1]}, 3. ${allAnswersTotal[2][2]}, 4. ${allAnswersTotal[2][3]}.`,  //3rd
+    `Let me repeat:  ${questionsList[3]} The possible answers are: 1. ${allAnswersTotal[3][0]}, 2. ${allAnswersTotal[3][1]}, 3. ${allAnswersTotal[3][2]}, 4. ${allAnswersTotal[3][3]}.`,  //4th
+    `I will say it again: ${questionsList[4]} The answers are: 1. ${allAnswersTotal[4][0]}, 2. ${allAnswersTotal[4][1]}, 3. ${allAnswersTotal[4][2]}, 4. ${allAnswersTotal[4][3]}.`,  //5th
+    `Let me repeat your question: ${questionsList[5]} Choose from the following answers: 1. ${allAnswersTotal[5][0]}, 2. ${allAnswersTotal[5][1]}, 3. ${allAnswersTotal[5][2]}, 4. ${allAnswersTotal[5][3]}.`,  //6th
+    `I will say it again: ${questionsList[6]} The possible answers are: 1. ${allAnswersTotal[6][0]}, 2. ${allAnswersTotal[6][1]}, 3. ${allAnswersTotal[6][2]}, 4. ${allAnswersTotal[6][3]}.`,  //7th
+    `I will read again: ${questionsList[7]} The answers are: 1. ${allAnswersTotal[7][0]}, 2. ${allAnswersTotal[7][1]}, 3. ${allAnswersTotal[7][2]}, 4. ${allAnswersTotal[7][3]}.`,  //8th
+    `I will say it again: ${questionsList[8]} The possible answers are: 1. ${allAnswersTotal[8][0]}, 2. ${allAnswersTotal[8][1]}, 3. ${allAnswersTotal[8][2]}, 4. ${allAnswersTotal[8][3]}.`,  //9th
+    `Let me repeat:  ${questionsList[9]} Choose from the following answers: 1. ${allAnswersTotal[9][0]}, 2. ${allAnswersTotal[9][1]}, 3. ${allAnswersTotal[9][2]}, 4. ${allAnswersTotal[9][3]}.`,  //10th
+    `I will read it again: ${questionsList[10]} The answers are: 1. ${allAnswersTotal[10][0]}, 2. ${allAnswersTotal[10][1]}, 3. ${allAnswersTotal[10][2]}, 4. ${allAnswersTotal[10][3]}.`,  //11th
+    `Let me repeat your final question:  ${questionsList[11]} You have the following possible answers: 1. ${allAnswersTotal[11][0]}, 2. ${allAnswersTotal[11][1]}, 3. ${allAnswersTotal[11][2]}, 4. ${allAnswersTotal[11][3]}.`,  //12th
+    `Let me repeat your backup question:  ${questionsList[12]} The possible answers are: 1. ${allAnswersTotal[12][0]}, 2. ${allAnswersTotal[12][1]}, 3. ${allAnswersTotal[12][2]}, 4. ${allAnswersTotal[12][3]}.`,  //13th
+];
 
-(context: SDSContext) => { const finalAnswer: string[] = [] }
 
-(context: SDSContext) => { const chitChat1: string[] = [] }
-(context: SDSContext) => { const chitChat2: string[] = [] }
-(context: SDSContext) => { const chitChat3: string[] = [] }
+const question3: string[] = [
+    `I will say it one last time: ${questionsList[0]} The possible answers are: 1. ${allAnswersTotal[0][0]}, 2. ${allAnswersTotal[0][1]}, 3. ${allAnswersTotal[0][2]}, 4. ${allAnswersTotal[0][3]}.`,  //1st
+    `I will repeat it one last time: ${questionsList[1]} The answers are: 1. ${allAnswersTotal[1][0]}, 2. ${allAnswersTotal[1][1]}, 3. ${allAnswersTotal[1][2]}, 4. ${allAnswersTotal[1][3]}.`,  //2nd
+    `I will say it one last time: ${questionsList[2]} Choose from the following answers: 1. ${allAnswersTotal[2][0]}, 2. ${allAnswersTotal[2][1]}, 3. ${allAnswersTotal[2][2]}, 4. ${allAnswersTotal[2][3]}.`,  //3rd
+    `For the last time: ${questionsList[3]} The possible answers are: 1. ${allAnswersTotal[3][0]}, 2. ${allAnswersTotal[3][1]}, 3. ${allAnswersTotal[3][2]}, 4. ${allAnswersTotal[3][3]}.`,  //4th
+    `I will read it one last time: ${questionsList[4]} You can choose from these answers: 1. ${allAnswersTotal[4][0]}, 2. ${allAnswersTotal[4][1]}, 3. ${allAnswersTotal[4][2]}, 4. ${allAnswersTotal[4][3]}.`,  //5th
+    `I will repeat the question one last time: ${questionsList[5]} The possible answers are: 1. ${allAnswersTotal[5][0]}, 2. ${allAnswersTotal[5][1]}, 3. ${allAnswersTotal[5][2]}, 4. ${allAnswersTotal[5][3]}.`,  //6th
+    `I will say it one last time: ${questionsList[6]} The answers are: 1. ${allAnswersTotal[6][0]}, 2. ${allAnswersTotal[6][1]}, 3. ${allAnswersTotal[6][2]}, 4. ${allAnswersTotal[6][3]}.`,  //7th
+    `I will read it one last time: ${questionsList[7]} Choose from the following answers: 1. ${allAnswersTotal[7][0]}, 2. ${allAnswersTotal[7][1]}, 3. ${allAnswersTotal[7][2]}, 4. ${allAnswersTotal[7][3]}.`,  //8th
+    `I will say the question one last time: ${questionsList[8]} The possible answers are: 1. ${allAnswersTotal[8][0]}, 2. ${allAnswersTotal[8][1]}, 3. ${allAnswersTotal[8][2]}, 4. ${allAnswersTotal[8][3]}.`,  //9th
+    `I will repeat it one last time: ${questionsList[9]} Choose from the following answers: 1. ${allAnswersTotal[9][0]}, 2. ${allAnswersTotal[9][1]}, 3. ${allAnswersTotal[9][2]}, 4. ${allAnswersTotal[9][3]}.`,  //10th
+    `For the last time: ${questionsList[10]} The answers are: 1. ${allAnswersTotal[10][0]}, 2. ${allAnswersTotal[10][1]}, 3. ${allAnswersTotal[10][2]}, 4. ${allAnswersTotal[10][3]}.`,  //11th
+    `I will read it one last time: ${questionsList[11]} You can choose from these answers: 1. ${allAnswersTotal[11][0]}, 2. ${allAnswersTotal[11][1]}, 3. ${allAnswersTotal[11][2]}, 4. ${allAnswersTotal[11][3]}.`,  //12th
+    `I will say your backup question one last time: ${questionsList[12]} The possible answers are: 1. ${allAnswersTotal[12][0]}, 2. ${allAnswersTotal[12][1]}, 3. ${allAnswersTotal[12][2]}, 4. ${allAnswersTotal[12][3]}.`,  //13th
+];
+
+
+const question5050_1: string[] = [];
+const question5050_2: string[] = [];
+const question5050_3: string[] = [];
+
+const finalAnswer: string[] = [];
+
+const chitChat1: string[] = [];
+const chitChat2: string[] = [];
+const chitChat3: string[] = [];
 
 const ans_grammar: { [index: string]: { confirmation?: string, negation?: string, help?: string } } = {
 
@@ -102,8 +139,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
         },
         init: {
             on: {
-                TTS_READY: 'askForName',
-                CLICK: 'askForName'
+                TTS_READY: 'selectDifficulty',
+                CLICK: 'selectDifficulty'
             }
         },
 
@@ -122,160 +159,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                     on: { ENDSPEECH: '#root.dm.playMillionaire.hist' },
                 }
             }
-        },
-
-        askForName: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: '#root.dm.init',
-                        cond: (context) => context.recResult[0].utterance.indexOf("quit") !== -1 || context.recResult[0].utterance.indexOf("Quit") !== -1
-                    },
-                    {
-                        target: 'greet',
-                        actions: assign({ username: (context) => context.recResult[0].utterance })
-                    },
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("Hi, what's your name?"),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                ask: {
-                    entry: send('LISTEN'),
-                }
-            }
-        },
-
-        greet: {
-            entry: send((context) => ({
-                type: 'SPEAK',
-                value: `Welcome, nice to meet you, ${context.username}.`
-            })),
-            on: { ENDSPEECH: 'smallTalkHome' }
-        },
-
-        smallTalkHome: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'explaining',
-                        cond: (context) => context.recResult[0].utterance.indexOf("skip") !== -1 || context.recResult[0].utterance.indexOf("Skip") !== -1,
-                    },
-                    {
-                        target: '#root.dm.init',
-                        cond: (context) => context.recResult[0].utterance.indexOf("quit") !== -1 || context.recResult[0].utterance.indexOf("Quit") !== -1
-                    },
-                    {
-                        target: 'smallTalkJob',
-                    }
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("Where are you from?"),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                ask: {
-                    entry: send('LISTEN'),
-                }
-            }
-        },
-
-        smallTalkJob: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'explaining',
-                        cond: (context) => context.recResult[0].utterance.indexOf("skip") !== -1 || context.recResult[0].utterance.indexOf("Skip") !== -1,
-                    },
-                    {
-                        target: '#root.dm.init',
-                        cond: (context) => context.recResult[0].utterance.indexOf("quit") !== -1 || context.recResult[0].utterance.indexOf("Quit") !== -1
-                    },
-                    {
-                        target: 'approveOf',
-                    }
-                ],
-                TIMEOUT: '.prompt'
-            },
-            states: {
-                prompt: {
-                    entry: say("Sounds awesome! Tell us what you do for a living."),
-                    on: { ENDSPEECH: 'ask' }
-                },
-                ask: {
-                    entry: send('LISTEN'),
-                }
-            }
-        },
-
-        approveOf: {
-            entry: send((context) => ({
-                type: 'SPEAK',
-                value: `That sounds really exciting! But enough talk, let's move on.`
-            })),
-            on: { ENDSPEECH: 'explaining' }
-        },
-
-        explaining: {
-            initial: 'prompt',
-            on: {
-                RECOGNISED: [
-                    {
-                        target: 'explainRules',
-                        cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}), 
-                    },
-                    {
-                        target: 'selectDifficulty', 
-                        cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                    },
-                    {
-                        target: '#root.dm.init',
-                        cond: (context) => context.recResult[0].utterance.indexOf("quit") !== -1 || context.recResult[0].utterance.indexOf("Quit") !== -1
-                    },
-                    {
-                        target: '.nomatch',
-                    }
-                ],
-                TIMEOUT: { target: '.prompt' }
-            },
-            states: {
-                prompt: {
-                    entry: send((context) => ({
-                        type: 'SPEAK',
-                        value: `Would you like me to explain the rules for you?` 
-                    })),
-                    on: {
-                        ENDSPEECH: 'ask'
-                    }
-                },
-                ask: {
-                    entry: send('LISTEN'),
-                },
-                nomatch: {
-                    entry: say("Sorry, I did not get that."),
-                    on: { ENDSPEECH: 'prompt' }
-                },
-            },
-        },
-
-        explainRules: {
-            entry: say(`The goal of the game is to answer 12 questions correctly. Answering each question increases your reward. You can choose to walk away with your winnings after answering a question correctly.
-                                Answering a question incorrectly means you will only receive money from safety steps: $1000 at question 2 and $50000 at question 7. To help you you have 2 lifelines. The lifelines include
-                                fifty-fifty, which will remove two of the incorrect answers and switch the question, which will change the question altogether. You can fifty-fifty a switched question, but you cannot switch a
-                                question you used fifty-fifty on.
-                                You can answer the questions by saying answer 1 or first answer, answer 2 or second answer, etc. It is important that you include the number so that it is easy for the system to understand.
-                                You can ask to use lifelines by saying the name of the lifeline. You can ask for the question to be repeated by saying repeat. Between the questions you can quit the game by saying quit. You can
-                                walk away with your winnings by saying walk away. You can inquire about the current question number by asking "how much money do I have?", and you can also ask "how many questions are left?".
-                                Make sure to speak clearly and in phrases that the game can understand.`),
-            on: { ENDSPEECH: 'selectDifficulty' }
         },
 
         selectDifficulty: {
@@ -452,17 +335,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 cond: (context) => context.recResult[0].utterance.indexOf("repeat") !== -1 || context.recResult[0].utterance.indexOf("Repeat") !== -1
                             },
                             {
-                                target: '.fiftyFifty',
-                                cond: (context) => context.recResult[0].utterance.indexOf("fifty") !== -1 || context.recResult[0].utterance.indexOf("Fifty") !== -1 ||
-                                    context.recResult[0].utterance.indexOf("50") !== -1 || context.recResult[0].utterance.indexOf("5050") !== -1,
-                                actions: assign({ counter: (context) => 0 })
-                            },
-                            {
-                                target: '.switchQuestion',
-                                cond: (context) => context.recResult[0].utterance.indexOf("switch") !== -1 || context.recResult[0].utterance.indexOf("Switch") !== -1,
-                                actions: assign({ counter: (context) => 0 })
-                            },
-                            {
                                 target: '.checkTrue', // change
                                 cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
                                     context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
@@ -505,7 +377,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         prompt1: {
                             entry: send((context) => ({ // change
                                 type: 'SPEAK', // corr answer A
-                                value: `Okay, your first question is: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                                value: question1[context.currentQuestion]
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
@@ -514,7 +386,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         prompt2: {
                             entry: send((context) => ({ // change
                                 type: 'SPEAK', // corr answer A
-                                value: `${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                                value: question2[context.currentQuestion]
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
@@ -523,7 +395,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                         prompt3: {
                             entry: send((context) => ({ // change
                                 type: 'SPEAK', // corr answer A
-                                value: `This is your last chance to answer this question: ${context.question1} The possible answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}, 3. ${context.incorrAnswerTwo1}, 4. ${context.incorrAnswerThree1}.`
+                                value: question3[context.currentQuestion]
                             })),
                             on: {
                                 ENDSPEECH: 'ask'
@@ -616,195 +488,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                                 },
 
                             },
-                        },
-                        // lifelines
-                        // 50/50
-                        fiftyFifty: {
-                            initial: 'select',
-                            on: {
-                                RECOGNISED: [
-                                    {
-                                        target: '.checkTrue', // change
-                                        cond: (context) => context.recResult[0].utterance.indexOf("first") !== -1 || context.recResult[0].utterance.indexOf("one") !== -1 || context.recResult[0].utterance.indexOf("1st") !== -1 ||
-                                            context.recResult[0].utterance.indexOf("1") !== -1 || context.recResult[0].utterance.indexOf("One") !== -1 || context.recResult[0].utterance.indexOf("First") !== -1,
-                                        actions: assign({ uncertainAnswer: (context) => "1" })
-                                    },
-                                    {
-                                        target: '.checkFalse', // change
-                                        cond: (context) => context.recResult[0].utterance.indexOf("second") !== -1 || context.recResult[0].utterance.indexOf("two") !== -1 || context.recResult[0].utterance.indexOf("2nd") !== -1 ||
-                                            context.recResult[0].utterance.indexOf("2") !== -1 || context.recResult[0].utterance.indexOf("Two") !== -1 || context.recResult[0].utterance.indexOf("Second") !== -1,
-                                        actions: assign({ uncertainAnswer: (context) => "2" })
-                                    },
-                                    {
-                                        target: '.nomatch',
-                                        actions: assign({ counter: (context) => context.counter + 1 })
-                                    }
-                                ],
-                                TIMEOUT: { target: '.select', actions: assign({ counter: (context) => context.counter + 1 }) }
-                            },
-                            states: {
-                                select: {
-                                    always: [
-                                        { target: 'goBack', cond: (context) => context.fiftyFiftyCounter !== 0 },
-                                        { target: 'reducedQuestion1', cond: (context) => context.counter === 0 && context.fiftyFiftyCounter === 0 },
-                                        { target: 'reducedQuestion2', cond: (context) => context.counter === 1 && context.fiftyFiftyCounter === 0 },
-                                        { target: 'reducedQuestion3', cond: (context) => context.counter === 2 && context.fiftyFiftyCounter === 0 },
-                                        { target: '#root.dm.playMillionaire.firstQuestion.youFailed', cond: (context) => context.counter === 3 }, // change
-                                    ]
-                                },
-                                goBack: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `I am sorry, but you have already used up your fifty-fifty lifeline.`
-                                    })),
-                                    on: {
-                                        ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' // change
-                                    }
-                                },
-                                reducedQuestion1: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `Okay, let me take away two of the incorrect answers and re-read the question for you together with the remaining two options. ${context.question1}
-                                                The remaining answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
-                                    })),
-                                    on: {
-                                        ENDSPEECH: 'ask'
-                                    }
-                                },
-                                reducedQuestion2: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `${context.question1} The remaining answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
-                                    })),
-                                    on: {
-                                        ENDSPEECH: 'ask'
-                                    }
-                                },
-                                reducedQuestion3: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `For the final time: ${context.question1}. The answers are: 1. ${context.corrAnswer1}, 2. ${context.incorrAnswerOne1}.` // change
-                                    })),
-                                    on: {
-                                        ENDSPEECH: 'ask'
-                                    }
-                                },
-                                ask: {
-                                    entry: send('LISTEN'),
-                                },
-                                nomatch: {
-                                    entry: say("Sorry, I did not get that."),
-                                    on: { ENDSPEECH: 'select' }
-                                },
-                                checkTrue: {
-                                    initial: 'makeSure',
-                                    on: {
-                                        RECOGNISED: [
-                                            {
-                                                target: '#root.dm.playMillionaire.firstQuestion.goodJob', // change
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: [assign({ counter: (context) => 0 }), assign({ currentMoney: (context) => '$500' }), assign({ fiftyFiftyCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })], // add safe step whenever necessary
-                                            },
-                                            {
-                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty', // change
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: assign({ counter: (context) => context.counter + 1 }),
-                                            },
-                                            {
-                                                target: '.nomatch',
-                                            }
-                                        ],
-                                        TIMEOUT: { target: '.makeSure' }
-                                    },
-                                    states: {
-                                        makeSure: {
-                                            entry: send((context) => ({
-                                                type: 'SPEAK',
-                                                value: `Is ${context.uncertainAnswer} your final answer?` // change
-                                            })),
-                                            on: {
-                                                ENDSPEECH: 'ask'
-                                            }
-                                        },
-                                        ask: {
-                                            entry: send('LISTEN'),
-                                        },
-                                        nomatch: {
-                                            entry: say("Sorry, I did not get that."),
-                                            on: { ENDSPEECH: 'makeSure' }
-                                        },
-
-                                    },
-                                },
-                                checkFalse: {
-                                    initial: 'makeSure',
-                                    on: {
-                                        RECOGNISED: [
-                                            {
-                                                target: '#root.dm.playMillionaire.firstQuestion.youFailed', // change
-                                                cond: (context) => "confirmation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: assign({ counter: (context) => 0 }), // add safe step whenever necessary
-                                            },
-                                            {
-                                                target: '#root.dm.playMillionaire.firstQuestion.fiftyFifty', // change
-                                                cond: (context) => "negation" in (ans_grammar[context.recResult[0].utterance] || {}),
-                                                actions: assign({ counter: (context) => context.counter + 1 }),
-                                            },
-                                            {
-                                                target: '.nomatch',
-                                            }
-                                        ],
-                                        TIMEOUT: { target: '.makeSure' }
-                                    },
-                                    states: {
-                                        makeSure: {
-                                            entry: send((context) => ({
-                                                type: 'SPEAK',
-                                                value: `Is ${context.uncertainAnswer} your final answer?` // change
-                                            })),
-                                            on: {
-                                                ENDSPEECH: 'ask'
-                                            }
-                                        },
-                                        ask: {
-                                            entry: send('LISTEN'),
-                                        },
-                                        nomatch: {
-                                            entry: say("Sorry, I did not get that."),
-                                            on: { ENDSPEECH: 'makeSure' }
-                                        },
-
-                                    },
-                                },
-                            },
-                        },
-                        // switchQuestion
-                        switchQuestion: {
-                            initial: 'choose',
-                            states: {
-                                choose: {
-                                    always: [
-                                        { target: 'goBack', cond: (context) => context.switchCounter !== 0 },
-                                        { target: 'changeQuestion', cond: (context) => context.switchCounter === 0 },
-                                    ]
-                                },
-                                changeQuestion: {
-                                    entry: [send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `Okay, let me change your question to our backup question`
-                                    })), assign({ extraQuestionMoney: (context) => "$500" }), assign({ switchCounter: (context) => 1 }), assign({ currentQuestion: (context) => context.currentQuestion + 1 }), assign({ remainingQuestions: (context) => context.remainingQuestions - 1 })],
-                                    on: { ENDSPEECH: '#root.dm.playMillionaire.extraQuestion' }
-                                },
-                                goBack: {
-                                    entry: send((context) => ({
-                                        type: 'SPEAK',
-                                        value: `I am sorry, but you have already used up your switch question lifeline.`
-                                    })),
-                                    on: {
-                                        ENDSPEECH: '#root.dm.playMillionaire.firstQuestion' // change
-                                    }
-                                },
-                            }
                         },
                         // final states
                         goodJob: {
