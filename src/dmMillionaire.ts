@@ -1,10 +1,8 @@
 import { MachineConfig, send, Action, assign } from "xstate";
 
-
 function say(text: string): Action<SDSContext, SDSEvent> {
     return send((_context: SDSContext) => ({ type: "SPEAK", value: text }))
 }
-
 
 const kbRequest = (text: string) =>
     fetch(new Request(`https://opentdb.com/api.php?amount=15&difficulty=${text}&type=multiple`)).then(data => data.json())

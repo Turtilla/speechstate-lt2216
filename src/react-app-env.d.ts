@@ -54,7 +54,7 @@ interface SDSContext {
     timeCounter: number;
     partnerCounter: number;
 
-    // final project
+    // final project old idea
     question1: string;
     corrAnswer1: string;
     incorrAnswerOne1: string;

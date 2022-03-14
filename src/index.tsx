@@ -86,7 +86,7 @@ const machine = Machine<SDSContext, any, SDSEvent>({
                                 if (process.env.REACT_APP_TTS_VOICE) {
                                     voiceRe = RegExp(process.env.REACT_APP_TTS_VOICE, 'u')
                                 }
-                                const voice = voices.find(voice => /Brandon/u.test(voice.name))! //voices.find((v: any) => voiceRe.test(v.name))!
+                                const voice = voices.find(voice => /Brandon/u.test(voice.name))! //voices.find((v: any) => voiceRe.test(v.name))! - this was based on the solution linked by Nadina Suditu
                                 if (voice) {
                                     context.voice = voice
                                     callback('TTS_READY')
@@ -207,11 +207,11 @@ const ReactiveButton = (props: Props): JSX.Element => {
             promptText = promptText || 'Speaking...'
             break;
         case props.state.matches({ dm: 'idle' }):
-            promptText = "Click to start!"
+            promptText = "Click to play Who Wants to be a Millionaire!"
             circleClass = "circle-click"
             break;
         case props.state.matches({ dm: 'init' }):
-            promptText = "Click to start!"
+            promptText = "Click to play Who Wants to be a Millionaire!"
             circleClass = "circle-click"
             break;
         default:
