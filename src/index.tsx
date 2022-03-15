@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Machine, assign, actions, State } from "xstate";
 import { useMachine, asEffect } from "@xstate/react";
 import { inspect } from "@xstate/inspect";
-import { dmMachine } from "./dmMillionaireNew";
+import { dmMachine } from "./dmAppointmentPlus";
 
 import createSpeechRecognitionPonyfill from 'web-speech-cognitive-services/lib/SpeechServices/SpeechToText'
 import createSpeechSynthesisPonyfill from 'web-speech-cognitive-services/lib/SpeechServices/TextToSpeech';
@@ -207,11 +207,11 @@ const ReactiveButton = (props: Props): JSX.Element => {
             promptText = promptText || 'Speaking...'
             break;
         case props.state.matches({ dm: 'idle' }):
-            promptText = "Click to play Who Wants to be a Millionaire!"
+            promptText = "Click to play!"
             circleClass = "circle-click"
             break;
         case props.state.matches({ dm: 'init' }):
-            promptText = "Click to play Who Wants to be a Millionaire!"
+            promptText = "Click to play!"
             circleClass = "circle-click"
             break;
         default:
